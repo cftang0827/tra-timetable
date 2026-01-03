@@ -1,4 +1,5 @@
 <script setup>
+const BASE = import.meta.env.BASE_URL;
 import { ref, onMounted, computed, watch } from "vue";
 
 /* ---------- state ---------- */
@@ -77,14 +78,14 @@ function buildStopMap(stops) {
 
 /* ---------- load meta ---------- */
 async function loadStations() {
-  const res = await fetch("/data/meta/stationsMap.json");
+  const res = await fetch(`${BASE}/data/meta/stationsMap.json`);
   if (!res.ok) throw new Error(`stationsMap.json fetch failed: ${res.status}`);
   stations.value = await res.json();
 }
 
 async function loadCars() {
   // ✅ 改吃你 preprocess 產出的 meta（不再讀 /cars.json）
-  const res = await fetch("/data/meta/carsMap.json");
+  const res = await fetch(`${BASE}/data/meta/carsMap.json`);
   if (!res.ok) throw new Error(`carsMap.json fetch failed: ${res.status}`);
   carsMap.value = await res.json();
 }
@@ -92,7 +93,7 @@ async function loadCars() {
 /* ---------- load timetable ---------- */
 async function loadDay(yyyy_mm_dd) {
   const key = yyyy_mm_dd.replaceAll("-", "");
-  const base = `/data/days/${key}`;
+  const base = `${BASE}/data/days/${key}`;
   const [tRes, sRes] = await Promise.all([
     fetch(`${base}/trains.json`),
     fetch(`${base}/stopIndex.json`),
