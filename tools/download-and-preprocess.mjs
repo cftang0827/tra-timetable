@@ -181,7 +181,7 @@ function preprocessDay(raw) {
 async function main() {
   const carsPath = process.argv[2] ?? "./public/cars.json";
   const stationsPath = process.argv[3] ?? "./public/stations.json";
-  const days = 7;
+  const days = 28;
 
   // 1) meta maps
   const carsMap = normalizeCarsMap(await readJSON(carsPath));
