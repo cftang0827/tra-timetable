@@ -85,9 +85,7 @@ function stationName(code) {
 
 /* ---------- quick set now ---------- */
 function setNowDate() {
-  // keep within allowed range
-  const v = minDate.value;
-  date.value = v;
+  date.value = minDate.value;
   errorMsg.value = "";
   selectedTrainNo.value = "";
   results.value = [];
@@ -95,6 +93,22 @@ function setNowDate() {
 
 function setNowTime() {
   time.value = hhmmNowTaipei();
+}
+
+/* ✅ car type helpers */
+function isLocalTrain(carName) {
+  // 區間 / 區間快
+  return String(carName ?? "").includes("區間");
+}
+
+function getTrainEndpoints(trainObj) {
+  const stops = Array.isArray(trainObj?.stops) ? trainObj.stops : [];
+  if (!stops.length) return { start: "", end: "" };
+
+  const sorted = stops.slice().sort((a, b) => a[1] - b[1]);
+  const startCode = sorted[0]?.[0] ?? "";
+  const endCode = sorted[sorted.length - 1]?.[0] ?? "";
+  return { start: stationName(startCode), end: stationName(endCode) };
 }
 
 /* ---------- load meta ---------- */
@@ -169,11 +183,18 @@ function query() {
     if (a.dep < earliestMin) continue;
 
     const car = carsMap.value?.[t.carClass];
+    const carName = car?.name ?? car?.alias ?? t.carClass;
+
+    const { start, end } = getTrainEndpoints(t);
+
     results.value.push({
       trainNo,
-      carName: car?.name ?? car?.alias ?? t.carClass,
+      carName,
       dep: minToHHMM(a.dep),
       arr: minToHHMM(b.arr),
+      start,
+      end,
+      isLocal: isLocalTrain(carName),
     });
   }
 
@@ -207,7 +228,6 @@ function getTrainDetail(trainNo) {
 function toggleTrainDetail(trainNo) {
   selectedTrainNo.value = selectedTrainNo.value === trainNo ? "" : trainNo;
 
-  // ✅ optional: keep the clicked card in view
   requestAnimationFrame(() => {
     const el = document.getElementById(`train-${trainNo}`);
     el?.scrollIntoView?.({ behavior: "smooth", block: "nearest" });
@@ -432,7 +452,20 @@ onMounted(async () => {
                   {{ selectedTrainNo === r.trainNo ? "收合" : "展開" }}
                 </span>
               </div>
-              <div class="text-sm text-gray-500">{{ r.carName }}</div>
+
+              <!-- ✅ right side: car type + endpoints -->
+              <div class="text-right">
+                <div
+                  class="text-sm font-medium"
+                  :class="r.isLocal ? 'text-gray-500' : 'text-red-600'"
+                  :title="r.isLocal ? '區間/區間快' : '非區間（通常較容易客滿）'"
+                >
+                  {{ r.carName }}
+                </div>
+                <div class="text-xs text-gray-400">
+                  {{ r.start }} → {{ r.end }}
+                </div>
+              </div>
             </div>
 
             <div class="mt-1 text-gray-700">
