@@ -18,6 +18,9 @@ const results = ref([]);
 const loading = ref(false);
 const errorMsg = ref("");
 
+/* ✅ train detail (accordion) */
+const selectedTrainNo = ref(""); // currently opened train
+
 /* ---------- localStorage keys ---------- */
 const LS_FROM = "tra.from";
 const LS_TO = "tra.to";
@@ -64,7 +67,7 @@ function minToHHMM(min) {
 }
 
 function buildStopMap(stops) {
-  // station -> { order, depMin, arrMin }
+  // station -> { order, dep, arr }
   const map = {};
   for (const s of stops) {
     const station = s[0];
@@ -76,6 +79,10 @@ function buildStopMap(stops) {
   return map;
 }
 
+function stationName(code) {
+  return stations.value?.[code] ?? code;
+}
+
 /* ---------- load meta ---------- */
 async function loadStations() {
   const res = await fetch(`${BASE}/data/meta/stationsMap.json`);
@@ -84,7 +91,6 @@ async function loadStations() {
 }
 
 async function loadCars() {
-  // ✅ 改吃你 preprocess 產出的 meta（不再讀 /cars.json）
   const res = await fetch(`${BASE}/data/meta/carsMap.json`);
   if (!res.ok) throw new Error(`carsMap.json fetch failed: ${res.status}`);
   carsMap.value = await res.json();
@@ -99,13 +105,20 @@ async function loadDay(yyyy_mm_dd) {
     fetch(`${base}/stopIndex.json`),
   ]);
 
+  // ✅ Friendly message if date data not found
+  if (tRes.status === 404 || sRes.status === 404) {
+    const err = new Error("此日期尚未提供時刻表資料");
+    err.code = "NO_DATA";
+    throw err;
+  }
+
   if (!tRes.ok) throw new Error(`trains.json fetch failed: ${tRes.status}`);
   if (!sRes.ok) throw new Error(`stopIndex.json fetch failed: ${sRes.status}`);
 
   const t = await tRes.json();
   const idx = await sRes.json();
 
-  // ✅ 建立 stopMap，避免 query 每次 find() O(n)
+  // ✅ build stopMap (O(1) lookup)
   for (const trainNo of Object.keys(t)) {
     const stops = t[trainNo]?.stops;
     if (Array.isArray(stops) && !t[trainNo].stopMap) {
@@ -134,7 +147,6 @@ function query() {
     const t = trains.value[trainNo];
     if (!t) continue;
 
-    // ✅ O(1) lookup
     const a = t.stopMap?.[from.value];
     const b = t.stopMap?.[to.value];
     if (!a || !b) continue;
@@ -154,6 +166,40 @@ function query() {
   results.value.sort((x, y) => x.dep.localeCompare(y.dep));
 }
 
+/* ---------- detail helpers ---------- */
+function getTrainDetail(trainNo) {
+  if (!trainNo || !trains.value) return null;
+  const t = trains.value[trainNo];
+  if (!t) return null;
+
+  const car = carsMap.value?.[t.carClass];
+  const carName = car?.name ?? car?.alias ?? t.carClass;
+
+  const stops = Array.isArray(t.stops) ? t.stops : [];
+  const rows = stops
+    .slice()
+    .sort((a, b) => a[1] - b[1])
+    .map(([station, order, depMin, arrMin]) => ({
+      station,
+      order,
+      name: stationName(station),
+      arr: arrMin != null ? minToHHMM(arrMin) : "--:--",
+      dep: depMin != null ? minToHHMM(depMin) : "--:--",
+    }));
+
+  return { trainNo, carName, rows };
+}
+
+function toggleTrainDetail(trainNo) {
+  selectedTrainNo.value = selectedTrainNo.value === trainNo ? "" : trainNo;
+
+  // ✅ optional: keep the clicked card in view
+  requestAnimationFrame(() => {
+    const el = document.getElementById(`train-${trainNo}`);
+    el?.scrollIntoView?.({ behavior: "smooth", block: "nearest" });
+  });
+}
+
 /* ---------- actions ---------- */
 const canSearch = computed(() => {
   return Boolean(date.value && from.value && to.value && !loading.value);
@@ -164,6 +210,7 @@ async function onSearch() {
 
   errorMsg.value = "";
   results.value = [];
+  selectedTrainNo.value = "";
   loading.value = true;
 
   try {
@@ -182,7 +229,8 @@ function swapStations() {
   from.value = to.value;
   to.value = tmp;
 
-  // ✅ 如果已載入當天資料，交換後直接更新結果
+  selectedTrainNo.value = "";
+
   if (trains.value && stopIndex.value) query();
 }
 
@@ -212,7 +260,6 @@ watch(to, (v) => {
 
 /* ---------- init ---------- */
 onMounted(async () => {
-  // ✅ default date + Taipei now time
   date.value = minDate.value;
   time.value = hhmmNowTaipei();
 
@@ -222,7 +269,6 @@ onMounted(async () => {
     errorMsg.value = e?.message ?? String(e);
   }
 
-  // 站名載入後再回填（避免 value 存在但 option 還沒出現）
   loadFromToFromLocalStorage();
 });
 </script>
@@ -253,15 +299,12 @@ onMounted(async () => {
           </div>
         </div>
 
-        <!-- From + Swap + To (same row) -->
+        <!-- From + Swap + To -->
         <div class="col-span-2 md:col-span-2">
           <div class="flex items-end gap-2">
             <div class="flex-1 min-w-0">
               <label class="text-sm text-gray-600">起站</label>
-              <select
-                v-model="from"
-                class="mt-1 w-full min-w-0 rounded-lg border px-3 py-2 bg-white"
-              >
+              <select v-model="from" class="mt-1 w-full min-w-0 rounded-lg border px-3 py-2 bg-white">
                 <option value="">請選擇</option>
                 <option v-for="(name, code) in stations" :key="code" :value="code">
                   {{ name }}
@@ -277,28 +320,14 @@ onMounted(async () => {
               aria-label="交換起迄站"
               title="交換起迄站"
             >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                class="h-5 w-5 text-gray-600"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                stroke-width="2"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  d="M7 16l-4-4m0 0l4-4m-4 4h18M17 8l4 4m0 0l-4 4m4-4H3"
-                />
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M7 16l-4-4m0 0l4-4m-4 4h18M17 8l4 4m0 0l-4 4m4-4H3" />
               </svg>
             </button>
 
             <div class="flex-1 min-w-0">
               <label class="text-sm text-gray-600">迄站</label>
-              <select
-                v-model="to"
-                class="mt-1 w-full min-w-0 rounded-lg border px-3 py-2 bg-white"
-              >
+              <select v-model="to" class="mt-1 w-full min-w-0 rounded-lg border px-3 py-2 bg-white">
                 <option value="">請選擇</option>
                 <option v-for="(name, code) in stations" :key="code" :value="code">
                   {{ name }}
@@ -342,7 +371,7 @@ onMounted(async () => {
     <section class="max-w-5xl mx-auto px-4 mt-6 pb-10">
       <div v-if="loading" class="text-center text-gray-500">查詢中…</div>
 
-      <div v-else-if="results.length === 0" class="text-center text-gray-400">
+      <div v-else-if="results.length === 0 && !errorMsg" class="text-center text-gray-400">
         尚無符合條件的班次
       </div>
 
@@ -350,14 +379,71 @@ onMounted(async () => {
         <li
           v-for="r in results"
           :key="r.trainNo"
+          :id="`train-${r.trainNo}`"
           class="bg-white rounded-xl shadow px-4 py-3"
         >
-          <div class="flex justify-between items-center">
-            <div class="font-semibold text-lg">{{ r.trainNo }}</div>
-            <div class="text-sm text-gray-500">{{ r.carName }}</div>
-          </div>
-          <div class="mt-1 text-gray-700">
-            {{ r.dep }} → {{ r.arr }}
+          <!-- Summary row -->
+          <button
+            type="button"
+            class="w-full text-left cursor-pointer select-none active:scale-[0.99]"
+            @click="toggleTrainDetail(r.trainNo)"
+          >
+            <div class="flex justify-between items-center">
+              <div class="font-semibold text-lg flex items-center gap-2">
+                {{ r.trainNo }}
+                <span
+                  class="text-xs rounded-full border px-2 py-0.5"
+                  :class="selectedTrainNo === r.trainNo ? 'bg-slate-100 text-slate-600' : 'bg-white text-gray-400'"
+                >
+                  {{ selectedTrainNo === r.trainNo ? "收合" : "展開" }}
+                </span>
+              </div>
+              <div class="text-sm text-gray-500">{{ r.carName }}</div>
+            </div>
+
+            <div class="mt-1 text-gray-700">
+              {{ r.dep }} → {{ r.arr }}
+            </div>
+
+            <div class="mt-2 text-xs text-gray-400">點一下查看全部停靠站</div>
+          </button>
+
+          <!-- Detail accordion -->
+          <div v-if="selectedTrainNo === r.trainNo" class="mt-3 rounded-xl border bg-slate-50 overflow-hidden">
+            <div class="px-3 py-2 text-sm text-gray-600 flex items-center justify-between">
+              <div class="font-medium">
+                停靠站（{{ getTrainDetail(r.trainNo)?.rows?.length ?? 0 }}）
+              </div>
+              <button type="button" class="text-xs text-gray-500 underline" @click="selectedTrainNo = ''">
+                關閉
+              </button>
+            </div>
+
+            <div class="divide-y">
+              <div
+                v-for="(s, idx) in getTrainDetail(r.trainNo).rows"
+                :key="s.station + '-' + s.order"
+                class="px-3 py-2 flex items-center justify-between"
+              >
+                <div class="min-w-0">
+                  <div class="font-medium text-gray-800 truncate">
+                    {{ idx + 1 }}. {{ s.name }}
+                  </div>
+                  <div class="text-xs text-gray-400">{{ s.station }}</div>
+                </div>
+
+                <div class="text-sm text-gray-700 flex gap-3 shrink-0">
+                  <div class="text-right">
+                    <div class="text-xs text-gray-400">到</div>
+                    <div>{{ s.arr }}</div>
+                  </div>
+                  <div class="text-right">
+                    <div class="text-xs text-gray-400">開</div>
+                    <div>{{ s.dep }}</div>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </li>
       </ul>
