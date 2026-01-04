@@ -21,6 +21,12 @@ const errorMsg = ref("");
 /* ✅ train detail (accordion) */
 const selectedTrainNo = ref(""); // currently opened train
 
+/* ✅ latest news drawer */
+const showNews = ref(false);
+const newsLoading = ref(false);
+const newsError = ref("");
+const newsItems = ref([]); // [{ id?, date?, title?, body?, link? }]
+
 /* ---------- localStorage keys ---------- */
 const LS_FROM = "tra.from";
 const LS_TO = "tra.to";
@@ -109,6 +115,38 @@ function getTrainEndpoints(trainObj) {
   const startCode = sorted[0]?.[0] ?? "";
   const endCode = sorted[sorted.length - 1]?.[0] ?? "";
   return { start: stationName(startCode), end: stationName(endCode) };
+}
+
+/* ---------- latest news ---------- */
+async function loadNews() {
+  newsLoading.value = true;
+  newsError.value = "";
+  try {
+    const res = await fetch(`${BASE}/data/meta/news.json`, { cache: "no-store" });
+    if (res.status === 404) {
+      newsItems.value = [];
+      return;
+    }
+    if (!res.ok) throw new Error(`news.json fetch failed: ${res.status}`);
+
+    const data = await res.json();
+    if (Array.isArray(data?.items)) newsItems.value = data.items;
+    else if (Array.isArray(data)) newsItems.value = data;
+    else newsItems.value = [];
+  } catch (e) {
+    newsError.value = e?.message ?? String(e);
+  } finally {
+    newsLoading.value = false;
+  }
+}
+
+async function openNews() {
+  showNews.value = true;
+  await loadNews();
+}
+
+function closeNews() {
+  showNews.value = false;
 }
 
 /* ---------- load meta ---------- */
@@ -311,10 +349,89 @@ onMounted(async () => {
   <div class="min-h-screen bg-slate-50">
     <!-- Header -->
     <header class="sticky top-0 z-10 bg-white shadow-sm">
-      <div class="max-w-5xl mx-auto px-4 py-3">
+      <div class="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between">
         <h1 class="text-lg font-semibold">台鐵班次查詢</h1>
+
+        <button
+          type="button"
+          @click="openNews"
+          class="text-sm px-3 py-1.5 rounded-lg border bg-white text-gray-700 shadow-sm active:scale-95"
+          title="查看最新消息"
+        >
+          最新消息
+        </button>
       </div>
     </header>
+
+    <!-- ✅ Latest News Drawer -->
+    <div v-if="showNews" class="fixed inset-0 z-20">
+      <div class="absolute inset-0 bg-black/30" @click="closeNews"></div>
+
+      <aside
+        class="absolute right-0 top-0 h-full w-[92%] max-w-md bg-white shadow-xl flex flex-col"
+        role="dialog"
+        aria-modal="true"
+        aria-label="最新消息"
+      >
+        <div class="px-4 py-3 border-b flex items-center justify-between">
+          <div class="font-semibold">最新消息</div>
+          <button type="button" class="text-sm text-gray-500 underline" @click="closeNews">
+            關閉
+          </button>
+        </div>
+
+        <div class="p-4 overflow-y-auto">
+          <div v-if="newsLoading" class="text-sm text-gray-500">載入中…</div>
+
+          <div
+            v-else-if="newsError"
+            class="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700"
+          >
+            {{ newsError }}
+          </div>
+
+          <div v-else-if="newsItems.length === 0" class="text-sm text-gray-500">
+            目前沒有公告。
+            <div class="mt-2 text-xs text-gray-400">
+              你可以新增檔案：<span class="font-mono">public/data/meta/news.json</span>
+            </div>
+          </div>
+
+          <ul v-else class="space-y-3">
+            <li
+              v-for="(n, i) in newsItems"
+              :key="n.id ?? (n.date + '-' + i)"
+              class="rounded-xl border bg-slate-50 p-3"
+            >
+              <div class="flex items-start justify-between gap-3">
+                <div class="min-w-0">
+                  <div class="font-medium text-gray-800 truncate">{{ n.title ?? "公告" }}</div>
+                  <div class="text-xs text-gray-500 mt-0.5">{{ n.date ?? "" }}</div>
+                </div>
+
+                <a
+                  v-if="n.link"
+                  :href="n.link"
+                  target="_blank"
+                  rel="noreferrer"
+                  class="text-xs text-blue-600 underline shrink-0"
+                >
+                  連結
+                </a>
+              </div>
+
+              <div v-if="n.body" class="mt-2 text-sm text-gray-700 whitespace-pre-line">
+                {{ n.body }}
+              </div>
+            </li>
+          </ul>
+
+          <button type="button" class="mt-4 text-xs text-gray-500 underline" @click="loadNews">
+            重新整理
+          </button>
+        </div>
+      </aside>
+    </div>
 
     <!-- Search Card -->
     <section class="max-w-5xl mx-auto px-4 mt-4">
@@ -359,13 +476,23 @@ onMounted(async () => {
             <button
               type="button"
               @click="swapStations"
-              class="mb-0.5 h-10 w-10 shrink-0 rounded-full border bg-white shadow-sm
-                     flex items-center justify-center active:scale-95"
+              class="mb-0.5 h-10 w-10 shrink-0 rounded-full border bg-white shadow-sm flex items-center justify-center active:scale-95"
               aria-label="交換起迄站"
               title="交換起迄站"
             >
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M7 16l-4-4m0 0l4-4m-4 4h18M17 8l4 4m0 0l-4 4m4-4H3" />
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-5 w-5 text-gray-600"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M7 16l-4-4m0 0l4-4m-4 4h18M17 8l4 4m0 0l-4 4m4-4H3"
+                />
               </svg>
             </button>
 
@@ -406,8 +533,7 @@ onMounted(async () => {
         <button
           @click="onSearch"
           :disabled="!canSearch"
-          class="col-span-2 md:col-span-4 mt-2 rounded-xl bg-blue-600 py-2 text-white font-medium
-                 active:opacity-80 disabled:opacity-50 disabled:cursor-not-allowed"
+          class="col-span-2 md:col-span-4 mt-2 rounded-xl bg-blue-600 py-2 text-white font-medium active:opacity-80 disabled:opacity-50 disabled:cursor-not-allowed"
         >
           查詢班次
         </button>
