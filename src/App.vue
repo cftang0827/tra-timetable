@@ -83,6 +83,20 @@ function stationName(code) {
   return stations.value?.[code] ?? code;
 }
 
+/* ---------- quick set now ---------- */
+function setNowDate() {
+  // keep within allowed range
+  const v = minDate.value;
+  date.value = v;
+  errorMsg.value = "";
+  selectedTrainNo.value = "";
+  results.value = [];
+}
+
+function setNowTime() {
+  time.value = hhmmNowTaipei();
+}
+
 /* ---------- load meta ---------- */
 async function loadStations() {
   const res = await fetch(`${BASE}/data/meta/stationsMap.json`);
@@ -287,7 +301,17 @@ onMounted(async () => {
       <div class="bg-white rounded-xl shadow p-4 grid grid-cols-2 gap-3 md:grid-cols-4">
         <!-- Date -->
         <div class="col-span-2 md:col-span-1">
-          <label class="text-sm text-gray-600">日期</label>
+          <div class="flex items-center justify-between">
+            <label class="text-sm text-gray-600">日期</label>
+            <button
+              type="button"
+              @click="setNowDate"
+              class="text-xs px-2 py-1 rounded-md border bg-white text-gray-600 active:scale-95"
+              title="回到今天"
+            >
+              Now
+            </button>
+          </div>
           <div class="mt-1 w-full overflow-hidden rounded-lg">
             <input
               type="date"
@@ -339,7 +363,17 @@ onMounted(async () => {
 
         <!-- Time -->
         <div class="col-span-2 md:col-span-1">
-          <label class="text-sm text-gray-600">上車時間</label>
+          <div class="flex items-center justify-between">
+            <label class="text-sm text-gray-600">上車時間</label>
+            <button
+              type="button"
+              @click="setNowTime"
+              class="text-xs px-2 py-1 rounded-md border bg-white text-gray-600 active:scale-95"
+              title="使用現在時間"
+            >
+              Now
+            </button>
+          </div>
           <div class="mt-1 w-full overflow-hidden rounded-lg">
             <input
               type="time"
