@@ -2,9 +2,8 @@ name: Daily download TRA data
 
 on:
   schedule:
-    # GitHub Actions schedule uses UTC.
-    # 02:10 Asia/Taipei = 18:10 UTC (previous day)
-    - cron: "10 18 * * *"
+    # GitHub cron is UTC. 03:00 Asia/Taipei = 19:00 UTC (previous day)
+    - cron: "0 19 * * *"
   workflow_dispatch: {}
 
 permissions:
@@ -33,6 +32,12 @@ jobs:
       - name: Install deps
         run: npm ci
 
+      # ✅ 防止 days 目錄越長越大：每次重新生成一個乾淨的 window
+      - name: Clean old data window
+        run: |
+          rm -rf public/data/days
+          mkdir -p public/data/days
+
       - name: Run download
         run: npm run download
 
@@ -40,8 +45,8 @@ jobs:
         run: |
           set -e
 
-          # If nothing changed, exit cleanly
-          if git diff --quiet; then
+          # ✅ 用 status 才抓得到 untracked / deletions / modifications
+          if [ -z "$(git status --porcelain)" ]; then
             echo "No changes to commit."
             exit 0
           fi
@@ -49,6 +54,7 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-          git add -A
+          # ✅ -A 會 stage deletions + new files
+          git add -A public/data/days public/data/meta
           git commit -m "chore(data): daily update"
           git push
