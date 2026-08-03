@@ -7,6 +7,8 @@ export const LS_LOCALE = "tra.locale";
 export const messages = {
   "zh-TW": {
     appTitle: "台鐵班次查詢",
+    seoDescription: "快速查詢台鐵班次、起迄站、停靠站與分享單一班次連結。支援繁體中文、英文、日文，資料來源源自台鐵公開資料。",
+    seoKeywords: "台鐵班次查詢,台鐵時刻表,台灣鐵路,TRA timetable,台湾鉄道時刻表",
     latestNews: "最新消息",
     close: "關閉",
     loading: "載入中...",
@@ -63,6 +65,9 @@ export const messages = {
   },
   en: {
     appTitle: "TRA Timetable",
+    seoDescription:
+      "Search Taiwan Railway train schedules, stations, stops, and share direct train links. Supports Traditional Chinese, English, and Japanese using TRA open data.",
+    seoKeywords: "TRA timetable,Taiwan Railway schedule,Taiwan train search,TRA train stops",
     latestNews: "News",
     close: "Close",
     loading: "Loading...",
@@ -119,6 +124,9 @@ export const messages = {
   },
   ja: {
     appTitle: "台湾鉄道時刻表",
+    seoDescription:
+      "台湾鉄道の列車時刻、出発駅、到着駅、停車駅を検索し、列車ごとのリンクを共有できます。繁体字中国語、英語、日本語に対応しています。",
+    seoKeywords: "台湾鉄道時刻表,台鉄時刻表,台湾鉄道,TRA timetable,台湾列車検索",
     latestNews: "お知らせ",
     close: "閉じる",
     loading: "読み込み中...",
@@ -183,6 +191,10 @@ function browserLocale() {
 }
 
 export function initialLocale() {
+  const params = new URLSearchParams(window.location.search);
+  const queryLocale = params.get("lang");
+  if (SUPPORTED_LOCALES.includes(queryLocale)) return queryLocale;
+
   try {
     const saved = localStorage.getItem(LS_LOCALE);
     if (SUPPORTED_LOCALES.includes(saved)) return saved;

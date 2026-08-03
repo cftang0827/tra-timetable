@@ -56,6 +56,11 @@ const localeOptions = [
   { value: "en", label: "🇺🇸 EN" },
   { value: "ja", label: "🇯🇵 日本語" },
 ];
+const localeMeta = {
+  "zh-TW": { htmlLang: "zh-Hant-TW", ogLocale: "zh_TW", urlLang: "zh-TW" },
+  en: { htmlLang: "en", ogLocale: "en_US", urlLang: "en" },
+  ja: { htmlLang: "ja", ogLocale: "ja_JP", urlLang: "ja" },
+};
 
 function applyTheme(nextTheme) {
   theme.value = nextTheme === "dark" ? "dark" : "light";
@@ -160,6 +165,62 @@ function localizedText(value, fallback = "") {
   if (value == null) return fallback;
   if (typeof value === "string") return value;
   return value?.[activeLocale.value] ?? value?.["zh-TW"] ?? value?.en ?? fallback;
+}
+
+function setMetaByName(name, content) {
+  let el = document.querySelector(`meta[name="${name}"]`);
+  if (!el) {
+    el = document.createElement("meta");
+    el.setAttribute("name", name);
+    document.head.appendChild(el);
+  }
+  el.setAttribute("content", content);
+}
+
+function setMetaByProperty(property, content) {
+  let el = document.querySelector(`meta[property="${property}"]`);
+  if (!el) {
+    el = document.createElement("meta");
+    el.setAttribute("property", property);
+    document.head.appendChild(el);
+  }
+  el.setAttribute("content", content);
+}
+
+function currentSeoUrl(localeValue = activeLocale.value) {
+  const url = new URL(`https://${CANONICAL_HOST}/`);
+  if (localeValue !== "zh-TW") url.searchParams.set("lang", localeValue);
+  return url.toString();
+}
+
+function updateSeoMeta() {
+  const meta = localeMeta[activeLocale.value] ?? localeMeta["zh-TW"];
+  const title = t("appTitle");
+  const description = t("seoDescription");
+  const keywords = t("seoKeywords");
+  const url = currentSeoUrl();
+
+  document.documentElement.lang = meta.htmlLang;
+  document.title = title;
+  setMetaByName("description", description);
+  setMetaByName("keywords", keywords);
+  setMetaByProperty("og:site_name", title);
+  setMetaByProperty("og:title", title);
+  setMetaByProperty("og:description", description);
+  setMetaByProperty("og:url", url);
+  setMetaByProperty("og:locale", meta.ogLocale);
+  setMetaByName("twitter:title", title);
+  setMetaByName("twitter:description", description);
+}
+
+function syncLocaleQuery(v) {
+  const url = new URL(window.location.href);
+  const current = url.searchParams.get("lang");
+  if (current === v) return;
+
+  if (v === "zh-TW") url.searchParams.delete("lang");
+  else url.searchParams.set("lang", v);
+  window.history.replaceState({}, "", url.toString());
 }
 
 function redirectGitHubPagesToCustomDomain() {
@@ -646,8 +707,8 @@ watch(theme, (v) => {
 
 watch(locale, (v) => {
   if (!SUPPORTED_LOCALES.includes(v)) return;
-  document.documentElement.lang = v;
-  document.title = t("appTitle");
+  updateSeoMeta();
+  syncLocaleQuery(v);
   try {
     localStorage.setItem(LS_LOCALE, v);
   } catch {}
@@ -702,8 +763,7 @@ watch(toRegion, (v) => {
 /* ---------- init ---------- */
 onMounted(async () => {
   if (redirectGitHubPagesToCustomDomain()) return;
-  document.documentElement.lang = locale.value;
-  document.title = t("appTitle");
+  updateSeoMeta();
   date.value = minDate.value;
   time.value = hhmmNowTaipei();
   applyTheme(localStorage.getItem(LS_THEME) ?? theme.value);

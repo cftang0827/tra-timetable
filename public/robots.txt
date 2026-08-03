@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://tra-timetable.cftang.dev/sitemap.xml
