@@ -199,9 +199,11 @@ function updateSeoMeta() {
   const description = t("seoDescription");
   const keywords = t("seoKeywords");
   const url = currentSeoUrl();
+  const canonical = document.querySelector('link[rel="canonical"]');
 
   document.documentElement.lang = meta.htmlLang;
   document.title = title;
+  canonical?.setAttribute("href", url);
   setMetaByName("description", description);
   setMetaByName("keywords", keywords);
   setMetaByProperty("og:site_name", title);
