@@ -129,6 +129,10 @@ function minToHHMM(min) {
   return `${String(h).padStart(2, "0")}:${String(m).padStart(2, "0")}`;
 }
 
+function normalizeTrainNo(value) {
+  return String(value ?? "").trim().match(/^[A-Za-z0-9]+/)?.[0] ?? "";
+}
+
 function buildStopMap(stops) {
   // station -> { order, dep, arr }
   const map = {};
@@ -424,9 +428,10 @@ function getTrainDetail(trainNo) {
 const directTrainDetail = computed(() => getTrainDetail(directTrainNo.value));
 
 function trainShareUrl(trainNo) {
+  const normalizedTrainNo = normalizeTrainNo(trainNo);
   const url = new URL(window.location.href);
   url.searchParams.set("date", date.value);
-  url.searchParams.set("train", trainNo);
+  url.searchParams.set("train", normalizedTrainNo);
   return url.toString();
 }
 
@@ -465,17 +470,19 @@ async function copyText(text) {
 }
 
 async function shareTrain(trainNo) {
-  const detail = getTrainDetail(trainNo);
+  const normalizedTrainNo = normalizeTrainNo(trainNo);
+  if (!normalizedTrainNo) return;
+
+  const detail = getTrainDetail(normalizedTrainNo);
   const endpoints = detail?.rows?.length
     ? `${detail.rows[0].name} → ${detail.rows[detail.rows.length - 1].name}`
     : t("trainShareFallback");
-  const title = t("trainShareTitle", { trainNo });
-  const text = `${selectedDateLabel.value || date.value} ${trainNo} ${endpoints}`;
-  const url = trainShareUrl(trainNo);
+  const title = `${t("trainShareTitle", { trainNo: normalizedTrainNo })} ${endpoints}`;
+  const url = trainShareUrl(normalizedTrainNo);
 
   if (navigator.share) {
     try {
-      await navigator.share({ title, text, url });
+      await navigator.share({ title, url });
       showToast(t("shared"));
       return;
     } catch (e) {
@@ -531,7 +538,8 @@ async function onSearch() {
 }
 
 async function openDirectTrainPage(trainNo) {
-  if (!date.value || !trainNo) return;
+  const normalizedTrainNo = normalizeTrainNo(trainNo);
+  if (!date.value || !normalizedTrainNo) return;
 
   errorMsg.value = "";
   results.value = [];
@@ -541,10 +549,10 @@ async function openDirectTrainPage(trainNo) {
 
   try {
     await loadDay(date.value);
-    if (!trains.value?.[trainNo]) throw new Error(t("trainNotFound"));
+    if (!trains.value?.[normalizedTrainNo]) throw new Error(t("trainNotFound"));
 
-    directTrainNo.value = trainNo;
-    selectedTrainNo.value = trainNo;
+    directTrainNo.value = normalizedTrainNo;
+    selectedTrainNo.value = normalizedTrainNo;
   } catch (e) {
     errorMsg.value = e?.message ?? String(e);
   } finally {
@@ -702,8 +710,15 @@ onMounted(async () => {
   loadPreferencesFromLocalStorage();
   const params = new URLSearchParams(window.location.search);
   const sharedDate = params.get("date");
-  const sharedTrainNo = params.get("train");
+  const rawSharedTrainNo = params.get("train");
+  const sharedTrainNo = normalizeTrainNo(rawSharedTrainNo);
   if (sharedDate) date.value = sharedDate;
+
+  if (rawSharedTrainNo && sharedTrainNo && rawSharedTrainNo !== sharedTrainNo) {
+    const url = new URL(window.location.href);
+    url.searchParams.set("train", sharedTrainNo);
+    window.history.replaceState({}, "", url.toString());
+  }
 
   try {
     await Promise.all([loadCars(), loadStationRegions()]);
