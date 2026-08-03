@@ -802,7 +802,7 @@ onMounted(async () => {
               class="text-xs px-2 py-1 rounded-md border bg-white text-gray-600 active:scale-95"
               title="回到今天"
             >
-              Now
+              今日日期
             </button>
           </div>
           <div class="mt-1 w-full overflow-hidden rounded-lg">
@@ -818,8 +818,8 @@ onMounted(async () => {
 
         <!-- From + Swap + To -->
         <div class="col-span-2 md:col-span-2">
-          <div class="flex items-end gap-2">
-            <div class="flex-1 min-w-0">
+          <div class="flex flex-col md:flex-row md:items-end gap-2">
+            <div class="w-full md:flex-1 min-w-0">
               <div class="flex items-center justify-between gap-2">
                 <label class="text-sm text-gray-600">起站</label>
                 <button
@@ -859,7 +859,7 @@ onMounted(async () => {
             <button
               type="button"
               @click="swapStations"
-              class="mb-0.5 h-10 w-10 shrink-0 rounded-full border bg-white shadow-sm flex items-center justify-center active:scale-95"
+              class="self-center mt-4 mb-1 md:mt-0 md:mb-0.5 h-10 w-10 shrink-0 rounded-full border bg-white shadow-sm flex items-center justify-center active:scale-95 rotate-90 md:rotate-0 translate-y-2 md:translate-y-0"
               aria-label="交換起迄站"
               title="交換起迄站"
             >
@@ -879,7 +879,7 @@ onMounted(async () => {
               </svg>
             </button>
 
-            <div class="flex-1 min-w-0">
+            <div class="w-full md:flex-1 min-w-0">
               <label class="text-sm text-gray-600">迄站</label>
               <div class="mt-1 grid grid-cols-[minmax(5rem,0.8fr)_minmax(0,1.2fr)] gap-2">
                 <select
@@ -917,7 +917,7 @@ onMounted(async () => {
               class="text-xs px-2 py-1 rounded-md border bg-white text-gray-600 active:scale-95"
               title="使用現在時間"
             >
-              Now
+              現在時間
             </button>
           </div>
           <div class="mt-1 w-full overflow-hidden rounded-lg">
