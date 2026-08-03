@@ -1,10 +1,12 @@
 <script setup>
-const BASE = import.meta.env.BASE_URL;
+const BASE = import.meta.env.BASE_URL.replace(/\/$/, "");
+const CANONICAL_HOST = "tra-timetable.cftang.dev";
+const GITHUB_PAGES_PATH = "/tra-timetable";
 import { ref, onMounted, computed, watch } from "vue";
 
 /* ---------- state ---------- */
-const stations = ref({});
 const carsMap = ref({}); // id -> { name, alias }
+const stationRegionsMeta = ref({ allowedRegions: [], stations: [] });
 
 const trains = ref(null); // trainNo -> { carClass, stops: [[station, order, depMin, arrMin], ...], stopMap? }
 const stopIndex = ref(null); // station -> [trainNo...]
@@ -13,10 +15,17 @@ const date = ref("");
 const from = ref("");
 const to = ref("");
 const time = ref("00:00");
+const fromRegion = ref("北北基");
+const toRegion = ref("北北基");
+const theme = ref("light");
 
 const results = ref([]);
 const loading = ref(false);
 const errorMsg = ref("");
+const locating = ref(false);
+const directTrainNo = ref("");
+const toastMsg = ref("");
+let toastTimer = null;
 
 /* ✅ train detail (accordion) */
 const selectedTrainNo = ref(""); // currently opened train
@@ -30,6 +39,24 @@ const newsItems = ref([]); // [{ id?, date?, title?, body?, link? }]
 /* ---------- localStorage keys ---------- */
 const LS_FROM = "tra.from";
 const LS_TO = "tra.to";
+const LS_FROM_REGION = "tra.from.region";
+const LS_TO_REGION = "tra.to.region";
+const LS_DATE = "tra.date";
+const LS_TIME = "tra.time";
+const LS_THEME = "tra.theme";
+
+const isDarkTheme = computed(() => theme.value === "dark");
+
+function applyTheme(nextTheme) {
+  theme.value = nextTheme === "dark" ? "dark" : "light";
+  document.documentElement.classList.toggle("theme-dark", isDarkTheme.value);
+  document.documentElement.style.colorScheme = isDarkTheme.value ? "dark" : "light";
+}
+
+function toggleTheme() {
+  applyTheme(isDarkTheme.value ? "light" : "dark");
+  showToast(isDarkTheme.value ? "已切換深色模式" : "已切換淺色模式");
+}
 
 /* ---------- time/date helpers ---------- */
 function yyyymmddLocal(d) {
@@ -86,7 +113,84 @@ function buildStopMap(stops) {
 }
 
 function stationName(code) {
-  return stations.value?.[code] ?? code;
+  return stationByCode.value.get(code)?.stationName ?? code;
+}
+
+function redirectGitHubPagesToCustomDomain() {
+  if (!window.location.hostname.endsWith(".github.io")) return;
+  if (!window.location.pathname.startsWith(GITHUB_PAGES_PATH)) return;
+
+  const nextPath = window.location.pathname.slice(GITHUB_PAGES_PATH.length) || "/";
+  const nextUrl = `https://${CANONICAL_HOST}${nextPath}${window.location.search}${window.location.hash}`;
+  window.location.replace(nextUrl);
+  return true;
+}
+
+const stationByCode = computed(() => {
+  return new Map(stationRegionsMeta.value.stations.map((station) => [station.stationCode, station]));
+});
+
+const stationGroups = computed(() => {
+  return stationRegionsMeta.value.allowedRegions.map((region) => ({
+    id: region,
+    label: region,
+    stations: stationRegionsMeta.value.stations
+      .filter((station) => station.region === region)
+      .map((station) => ({
+        code: station.stationCode,
+        name: station.stationName,
+      })),
+  }));
+});
+
+const stationRegions = computed(() => {
+  return stationGroups.value.map(({ id, label }) => ({ id, label }));
+});
+
+function stationOptions(regionId) {
+  return stationGroups.value.find((region) => region.id === regionId)?.stations ?? [];
+}
+
+function stationRegion(code) {
+  for (const group of stationGroups.value) {
+    if (group.stations.some((station) => station.code === code)) return group.id;
+  }
+  return stationRegions.value[0]?.id ?? "北北基";
+}
+
+function syncRegionForStation(code, regionRef) {
+  if (!code) return;
+  regionRef.value = stationRegion(code);
+}
+
+function clearStationOutsideRegion(stationRef, regionId) {
+  if (stationRef.value && stationRegion(stationRef.value) !== regionId) {
+    stationRef.value = "";
+    selectedTrainNo.value = "";
+    results.value = [];
+  }
+}
+
+function distanceKm(a, b) {
+  const earthRadiusKm = 6371;
+  const lat1 = (a.lat * Math.PI) / 180;
+  const lat2 = (b.lat * Math.PI) / 180;
+  const deltaLat = ((b.lat - a.lat) * Math.PI) / 180;
+  const deltaLng = ((b.lng - a.lng) * Math.PI) / 180;
+  const sinLat = Math.sin(deltaLat / 2);
+  const sinLng = Math.sin(deltaLng / 2);
+  const h = sinLat * sinLat + Math.cos(lat1) * Math.cos(lat2) * sinLng * sinLng;
+  return 2 * earthRadiusKm * Math.atan2(Math.sqrt(h), Math.sqrt(1 - h));
+}
+
+function nearestStation(position) {
+  let nearest = null;
+  for (const station of stationRegionsMeta.value.stations) {
+    if (!station.gps) continue;
+    const km = distanceKm(position, station.gps);
+    if (!nearest || km < nearest.km) nearest = { station, km };
+  }
+  return nearest;
 }
 
 /* ---------- quick set now ---------- */
@@ -150,16 +254,21 @@ function closeNews() {
 }
 
 /* ---------- load meta ---------- */
-async function loadStations() {
-  const res = await fetch(`${BASE}/data/meta/stationsMap.json`);
-  if (!res.ok) throw new Error(`stationsMap.json fetch failed: ${res.status}`);
-  stations.value = await res.json();
-}
-
 async function loadCars() {
   const res = await fetch(`${BASE}/data/meta/carsMap.json`);
   if (!res.ok) throw new Error(`carsMap.json fetch failed: ${res.status}`);
   carsMap.value = await res.json();
+}
+
+async function loadStationRegions() {
+  const res = await fetch(`${BASE}/data/meta/stationRegions.json`);
+  if (!res.ok) throw new Error(`stationRegions.json fetch failed: ${res.status}`);
+
+  const data = await res.json();
+  stationRegionsMeta.value = {
+    allowedRegions: Array.isArray(data?.allowedRegions) ? data.allowedRegions : [],
+    stations: Array.isArray(data?.stations) ? data.stations : [],
+  };
 }
 
 /* ---------- load timetable ---------- */
@@ -263,6 +372,82 @@ function getTrainDetail(trainNo) {
   return { trainNo, carName, rows };
 }
 
+const directTrainDetail = computed(() => getTrainDetail(directTrainNo.value));
+
+function trainShareUrl(trainNo) {
+  const url = new URL(window.location.href);
+  url.searchParams.set("date", date.value);
+  url.searchParams.set("train", trainNo);
+  return url.toString();
+}
+
+function showToast(message) {
+  toastMsg.value = message;
+  if (toastTimer) window.clearTimeout(toastTimer);
+  toastTimer = window.setTimeout(() => {
+    toastMsg.value = "";
+    toastTimer = null;
+  }, 2400);
+}
+
+async function copyText(text) {
+  if (navigator.clipboard?.writeText) {
+    try {
+      await navigator.clipboard.writeText(text);
+      return true;
+    } catch {}
+  }
+
+  const textarea = document.createElement("textarea");
+  textarea.value = text;
+  textarea.setAttribute("readonly", "");
+  textarea.style.position = "fixed";
+  textarea.style.top = "0";
+  textarea.style.left = "-9999px";
+  document.body.appendChild(textarea);
+  textarea.select();
+  textarea.setSelectionRange(0, textarea.value.length);
+
+  try {
+    return document.execCommand("copy");
+  } finally {
+    document.body.removeChild(textarea);
+  }
+}
+
+async function shareTrain(trainNo) {
+  const detail = getTrainDetail(trainNo);
+  const endpoints = detail?.rows?.length
+    ? `${detail.rows[0].name} → ${detail.rows[detail.rows.length - 1].name}`
+    : "完整停靠站";
+  const title = `台鐵 ${trainNo} 班次`;
+  const text = `${date.value} ${trainNo} ${endpoints}`;
+  const url = trainShareUrl(trainNo);
+
+  if (navigator.share) {
+    try {
+      await navigator.share({ title, text, url });
+      showToast("已開啟分享");
+      return;
+    } catch (e) {
+      if (e?.name === "AbortError") return;
+    }
+  }
+
+  if (await copyText(url)) {
+    showToast("已複製班次連結");
+  } else {
+    showToast(url);
+  }
+}
+
+function clearDirectTrainPage() {
+  directTrainNo.value = "";
+  const url = new URL(window.location.href);
+  url.searchParams.delete("train");
+  window.history.replaceState({}, "", url.toString());
+}
+
 function toggleTrainDetail(trainNo) {
   selectedTrainNo.value = selectedTrainNo.value === trainNo ? "" : trainNo;
 
@@ -281,6 +466,7 @@ async function onSearch() {
   if (!date.value || !from.value || !to.value) return;
 
   errorMsg.value = "";
+  directTrainNo.value = "";
   results.value = [];
   selectedTrainNo.value = "";
   loading.value = true;
@@ -295,28 +481,128 @@ async function onSearch() {
   }
 }
 
+async function openDirectTrainPage(trainNo) {
+  if (!date.value || !trainNo) return;
+
+  errorMsg.value = "";
+  results.value = [];
+  directTrainNo.value = "";
+  selectedTrainNo.value = "";
+  loading.value = true;
+
+  try {
+    await loadDay(date.value);
+    if (!trains.value?.[trainNo]) throw new Error("找不到此日期的班次資料");
+
+    directTrainNo.value = trainNo;
+    selectedTrainNo.value = trainNo;
+  } catch (e) {
+    errorMsg.value = e?.message ?? String(e);
+  } finally {
+    loading.value = false;
+  }
+}
+
 function swapStations() {
   if (!from.value && !to.value) return;
   const tmp = from.value;
   from.value = to.value;
   to.value = tmp;
+  syncRegionForStation(from.value, fromRegion);
+  syncRegionForStation(to.value, toRegion);
 
   selectedTrainNo.value = "";
 
   if (trains.value && stopIndex.value) query();
 }
 
-/* ---------- persist from/to ---------- */
-function loadFromToFromLocalStorage() {
+async function useNearestStation() {
+  errorMsg.value = "";
+
+  if (!navigator.geolocation) {
+    showToast("此瀏覽器不支援定位");
+    return;
+  }
+
+  locating.value = true;
+
   try {
+    const position = await new Promise((resolve, reject) => {
+      navigator.geolocation.getCurrentPosition(resolve, reject, {
+        enableHighAccuracy: true,
+        timeout: 10000,
+        maximumAge: 5 * 60 * 1000,
+      });
+    });
+
+    const nearest = nearestStation({
+      lat: position.coords.latitude,
+      lng: position.coords.longitude,
+    });
+
+    if (!nearest) {
+      showToast("目前沒有可用的車站 GPS 資料");
+      return;
+    }
+
+    from.value = nearest.station.stationCode;
+    fromRegion.value = nearest.station.region;
+    selectedTrainNo.value = "";
+    results.value = [];
+    showToast(`已設定最近車站：${nearest.station.stationName}，約 ${nearest.km.toFixed(1)} km`);
+  } catch (e) {
+    if (e?.code === 1) showToast("定位權限未開啟");
+    else if (e?.code === 2) showToast("目前無法取得位置");
+    else if (e?.code === 3) showToast("定位逾時，請再試一次");
+    else showToast(e?.message ?? String(e));
+  } finally {
+    locating.value = false;
+  }
+}
+
+/* ---------- persist preferences ---------- */
+function loadPreferencesFromLocalStorage() {
+  try {
+    const savedTheme = localStorage.getItem(LS_THEME);
+    const savedDate = localStorage.getItem(LS_DATE);
+    const savedTime = localStorage.getItem(LS_TIME);
     const f = localStorage.getItem(LS_FROM);
     const t = localStorage.getItem(LS_TO);
+    const fr = localStorage.getItem(LS_FROM_REGION);
+    const tr = localStorage.getItem(LS_TO_REGION);
+
+    applyTheme(savedTheme ?? theme.value);
+    if (savedDate) date.value = savedDate;
+    if (savedTime) time.value = savedTime;
+    if (fr) fromRegion.value = fr;
+    if (tr) toRegion.value = tr;
     if (f) from.value = f;
     if (t) to.value = t;
   } catch {}
 }
 
+watch(theme, (v) => {
+  try {
+    localStorage.setItem(LS_THEME, v);
+  } catch {}
+});
+
+watch(date, (v) => {
+  try {
+    if (v) localStorage.setItem(LS_DATE, v);
+    else localStorage.removeItem(LS_DATE);
+  } catch {}
+});
+
+watch(time, (v) => {
+  try {
+    if (v) localStorage.setItem(LS_TIME, v);
+    else localStorage.removeItem(LS_TIME);
+  } catch {}
+});
+
 watch(from, (v) => {
+  syncRegionForStation(v, fromRegion);
   try {
     if (v) localStorage.setItem(LS_FROM, v);
     else localStorage.removeItem(LS_FROM);
@@ -324,24 +610,51 @@ watch(from, (v) => {
 });
 
 watch(to, (v) => {
+  syncRegionForStation(v, toRegion);
   try {
     if (v) localStorage.setItem(LS_TO, v);
     else localStorage.removeItem(LS_TO);
   } catch {}
 });
 
+watch(fromRegion, (v) => {
+  clearStationOutsideRegion(from, v);
+  try {
+    if (v) localStorage.setItem(LS_FROM_REGION, v);
+    else localStorage.removeItem(LS_FROM_REGION);
+  } catch {}
+});
+
+watch(toRegion, (v) => {
+  clearStationOutsideRegion(to, v);
+  try {
+    if (v) localStorage.setItem(LS_TO_REGION, v);
+    else localStorage.removeItem(LS_TO_REGION);
+  } catch {}
+});
+
 /* ---------- init ---------- */
 onMounted(async () => {
+  if (redirectGitHubPagesToCustomDomain()) return;
   date.value = minDate.value;
   time.value = hhmmNowTaipei();
+  applyTheme(localStorage.getItem(LS_THEME) ?? theme.value);
+  loadPreferencesFromLocalStorage();
+  const params = new URLSearchParams(window.location.search);
+  const sharedDate = params.get("date");
+  const sharedTrainNo = params.get("train");
+  if (sharedDate) date.value = sharedDate;
 
   try {
-    await Promise.all([loadStations(), loadCars()]);
+    await Promise.all([loadCars(), loadStationRegions()]);
   } catch (e) {
     errorMsg.value = e?.message ?? String(e);
   }
 
-  loadFromToFromLocalStorage();
+  syncRegionForStation(from.value, fromRegion);
+  syncRegionForStation(to.value, toRegion);
+
+  if (sharedTrainNo) await openDirectTrainPage(sharedTrainNo);
 });
 </script>
 
@@ -352,14 +665,57 @@ onMounted(async () => {
       <div class="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between">
         <h1 class="text-lg font-semibold">台鐵班次查詢</h1>
 
-        <button
-          type="button"
-          @click="openNews"
-          class="text-sm px-3 py-1.5 rounded-lg border bg-white text-gray-700 shadow-sm active:scale-95"
-          title="查看最新消息"
-        >
-          最新消息
-        </button>
+        <div class="flex items-center gap-2">
+          <button
+            type="button"
+            @click="toggleTheme"
+            class="h-9 w-9 rounded-lg border bg-white text-gray-700 shadow-sm active:scale-95 flex items-center justify-center"
+            :title="isDarkTheme ? '切換淺色模式' : '切換深色模式'"
+            :aria-label="isDarkTheme ? '切換淺色模式' : '切換深色模式'"
+          >
+            <svg
+              v-if="isDarkTheme"
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-5 w-5"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              stroke-width="2"
+              aria-hidden="true"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M12 3v2m0 14v2m9-9h-2M5 12H3m15.36 6.36-1.42-1.42M7.05 7.05 5.64 5.64m12.72 0-1.42 1.41M7.05 16.95l-1.41 1.41M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8Z"
+              />
+            </svg>
+            <svg
+              v-else
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-5 w-5"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              stroke-width="2"
+              aria-hidden="true"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M21 12.8A8.5 8.5 0 1 1 11.2 3a6.5 6.5 0 0 0 9.8 9.8Z"
+              />
+            </svg>
+          </button>
+
+          <button
+            type="button"
+            @click="openNews"
+            class="text-sm px-3 py-1.5 rounded-lg border bg-white text-gray-700 shadow-sm active:scale-95"
+            title="查看最新消息"
+          >
+            最新消息
+          </button>
+        </div>
       </div>
     </header>
 
@@ -464,13 +820,40 @@ onMounted(async () => {
         <div class="col-span-2 md:col-span-2">
           <div class="flex items-end gap-2">
             <div class="flex-1 min-w-0">
-              <label class="text-sm text-gray-600">起站</label>
-              <select v-model="from" class="mt-1 w-full min-w-0 rounded-lg border px-3 py-2 bg-white">
-                <option value="">請選擇</option>
-                <option v-for="(name, code) in stations" :key="code" :value="code">
-                  {{ name }}
-                </option>
-              </select>
+              <div class="flex items-center justify-between gap-2">
+                <label class="text-sm text-gray-600">起站</label>
+                <button
+                  type="button"
+                  @click="useNearestStation"
+                  :disabled="locating"
+                  class="text-xs px-2 py-1 rounded-md border bg-white text-gray-600 active:scale-95 disabled:opacity-50"
+                  title="使用目前位置找最近車站"
+                >
+                  {{ locating ? "定位中" : "最近車站" }}
+                </button>
+              </div>
+              <div class="mt-1 grid grid-cols-[minmax(5rem,0.8fr)_minmax(0,1.2fr)] gap-2">
+                <select
+                  v-model="fromRegion"
+                  class="w-full min-w-0 rounded-lg border px-3 py-2 bg-white"
+                  aria-label="起站地區"
+                >
+                  <option v-for="region in stationRegions" :key="region.id" :value="region.id">
+                    {{ region.label }}
+                  </option>
+                </select>
+
+                <select
+                  v-model="from"
+                  class="w-full min-w-0 rounded-lg border px-3 py-2 bg-white"
+                  aria-label="起站車站"
+                >
+                  <option value="">請選擇</option>
+                  <option v-for="station in stationOptions(fromRegion)" :key="station.code" :value="station.code">
+                    {{ station.name }}
+                  </option>
+                </select>
+              </div>
             </div>
 
             <button
@@ -498,12 +881,28 @@ onMounted(async () => {
 
             <div class="flex-1 min-w-0">
               <label class="text-sm text-gray-600">迄站</label>
-              <select v-model="to" class="mt-1 w-full min-w-0 rounded-lg border px-3 py-2 bg-white">
-                <option value="">請選擇</option>
-                <option v-for="(name, code) in stations" :key="code" :value="code">
-                  {{ name }}
-                </option>
-              </select>
+              <div class="mt-1 grid grid-cols-[minmax(5rem,0.8fr)_minmax(0,1.2fr)] gap-2">
+                <select
+                  v-model="toRegion"
+                  class="w-full min-w-0 rounded-lg border px-3 py-2 bg-white"
+                  aria-label="迄站地區"
+                >
+                  <option v-for="region in stationRegions" :key="region.id" :value="region.id">
+                    {{ region.label }}
+                  </option>
+                </select>
+
+                <select
+                  v-model="to"
+                  class="w-full min-w-0 rounded-lg border px-3 py-2 bg-white"
+                  aria-label="迄站車站"
+                >
+                  <option value="">請選擇</option>
+                  <option v-for="station in stationOptions(toRegion)" :key="station.code" :value="station.code">
+                    {{ station.name }}
+                  </option>
+                </select>
+              </div>
             </div>
           </div>
         </div>
@@ -551,11 +950,67 @@ onMounted(async () => {
     <section class="max-w-5xl mx-auto px-4 mt-6 pb-10">
       <div v-if="loading" class="text-center text-gray-500">查詢中…</div>
 
+      <div v-else-if="directTrainDetail" class="bg-white rounded-xl shadow overflow-hidden">
+        <div class="px-4 py-3 border-b flex items-start justify-between gap-3">
+          <div class="min-w-0">
+            <div class="font-semibold text-lg">
+              {{ directTrainDetail.trainNo }} {{ directTrainDetail.carName }}
+            </div>
+            <div v-if="directTrainDetail.rows.length" class="text-sm text-gray-500 mt-0.5">
+              {{ date }} · {{ directTrainDetail.rows[0].name }} → {{ directTrainDetail.rows[directTrainDetail.rows.length - 1].name }}
+            </div>
+          </div>
+
+          <div class="flex gap-2 shrink-0">
+            <button
+              type="button"
+              class="text-xs px-3 py-1.5 rounded-lg border bg-white text-gray-600 active:scale-95"
+              @click="shareTrain(directTrainDetail.trainNo)"
+            >
+              分享
+            </button>
+            <button
+              type="button"
+              class="text-xs px-3 py-1.5 rounded-lg border bg-white text-gray-500 active:scale-95"
+              @click="clearDirectTrainPage"
+            >
+              返回
+            </button>
+          </div>
+        </div>
+
+        <div class="divide-y">
+          <div
+            v-for="(s, idx) in directTrainDetail.rows"
+            :key="s.station + '-' + s.order"
+            class="px-4 py-3 flex items-center justify-between"
+          >
+            <div class="min-w-0">
+              <div class="font-medium text-gray-800 truncate">
+                {{ idx + 1 }}. {{ s.name }}
+              </div>
+              <div class="text-xs text-gray-400">{{ s.station }}</div>
+            </div>
+
+            <div class="text-sm text-gray-700 flex gap-3 shrink-0">
+              <div class="text-right">
+                <div class="text-xs text-gray-400">到</div>
+                <div>{{ s.arr }}</div>
+              </div>
+              <div class="text-right">
+                <div class="text-xs text-gray-400">開</div>
+                <div>{{ s.dep }}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <div v-else-if="results.length === 0 && !errorMsg" class="text-center text-gray-400">
         尚無符合條件的班次
       </div>
 
-      <ul class="space-y-3">
+      <ul v-else class="space-y-3">
         <li
           v-for="r in results"
           :key="r.trainNo"
@@ -601,6 +1056,16 @@ onMounted(async () => {
             <div class="mt-2 text-xs text-gray-400">點一下查看全部停靠站</div>
           </button>
 
+          <div class="mt-3 flex justify-end">
+            <button
+              type="button"
+              class="text-xs px-3 py-1.5 rounded-lg border bg-white text-gray-600 active:scale-95"
+              @click="shareTrain(r.trainNo)"
+            >
+              分享此班次
+            </button>
+          </div>
+
           <!-- Detail accordion -->
           <div v-if="selectedTrainNo === r.trainNo" class="mt-3 rounded-xl border bg-slate-50 overflow-hidden">
             <div class="px-3 py-2 text-sm text-gray-600 flex items-center justify-between">
@@ -641,5 +1106,14 @@ onMounted(async () => {
         </li>
       </ul>
     </section>
+
+    <div
+      v-if="toastMsg"
+      class="fixed left-1/2 bottom-5 z-30 w-[calc(100%-2rem)] max-w-sm -translate-x-1/2 rounded-xl bg-slate-900 px-4 py-3 text-center text-sm text-white shadow-lg"
+      role="status"
+      aria-live="polite"
+    >
+      {{ toastMsg }}
+    </div>
   </div>
 </template>

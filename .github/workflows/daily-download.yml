@@ -45,6 +45,9 @@ jobs:
       - name: Run download
         run: npm run download
 
+      - name: Check station metadata
+        run: npm run check:stations
+
       - name: Commit changes (if any) + push
         id: commit
         run: |
@@ -74,6 +77,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: main
 
       - uses: actions/setup-node@v4
         with:
@@ -81,6 +86,7 @@ jobs:
           cache: "npm"
 
       - run: npm ci
+      - run: npm run check:stations
       - run: npm run build
 
       - name: Upload Pages artifact

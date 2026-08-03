@@ -4,7 +4,7 @@ import tailwindcss from "@tailwindcss/vite";
 import { VitePWA } from "vite-plugin-pwa";
 
 export default defineConfig({
-  base: "/tra-timetable/",
+  base: "./",
   plugins: [
     vue(),
     tailwindcss(),
@@ -18,8 +18,8 @@ export default defineConfig({
         theme_color: "#0f172a",
         background_color: "#ffffff",
         display: "standalone",
-        scope: "/tra-timetable/",
-        start_url: "/tra-timetable/",
+        scope: "./",
+        start_url: "./",
         icons: [
           {
             src: "pwa-192x192.png",

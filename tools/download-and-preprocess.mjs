@@ -114,20 +114,6 @@ function normalizeCarsMap(carsJson) {
 }
 
 
-function normalizeStationsMap(stationsJson) {
-  // 你貼的是 array: [{stationCode, stationName, ...}, ...]
-  if (!Array.isArray(stationsJson)) {
-    throw new Error("stations.json format unexpected (expected an array)");
-  }
-  const map = {};
-  for (const s of stationsJson) {
-    const code = String(s.stationCode ?? "");
-    const name = String(s.stationName ?? s.name ?? "");
-    if (code && name) map[code] = name;
-  }
-  return map;
-}
-
 function preprocessDay(raw) {
   // outputs:
   // trains: trainNo -> { carClass, line, lineDir, stops: [[station, order, depMin, arrMin], ...] }
@@ -180,15 +166,12 @@ function preprocessDay(raw) {
 
 async function main() {
   const carsPath = process.argv[2] ?? "./public/cars.json";
-  const stationsPath = process.argv[3] ?? "./public/stations.json";
   const days = 28;
 
   // 1) meta maps
   const carsMap = normalizeCarsMap(await readJSON(carsPath));
-  const stationsMap = normalizeStationsMap(await readJSON(stationsPath));
 
   await writeJSON(path.join(OUT_META_DIR, "carsMap.json"), carsMap);
-  await writeJSON(path.join(OUT_META_DIR, "stationsMap.json"), stationsMap);
 
   // 2) list page -> filename => url
   const html = await fetchText(LIST_URL);

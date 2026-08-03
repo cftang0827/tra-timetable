@@ -7,7 +7,9 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "download": "node tools/download-and-preprocess.mjs"
+    "download": "node tools/download-and-preprocess.mjs && npm run generate:station-regions",
+    "generate:station-regions": "node tools/generate-station-regions.mjs",
+    "check:stations": "node tools/check-station-regions.mjs"
   },
   "dependencies": {
     "vue": "^3.5.24"
