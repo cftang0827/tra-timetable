@@ -3,8 +3,20 @@ import path from "node:path";
 
 const stationsPath = process.argv[2] ?? "public/stations.json";
 const outPath = process.argv[3] ?? "public/data/meta/stationRegions.json";
+const jaLabelsPath = process.argv[4] ?? "public/data/meta/stationJaLabels.json";
 
 const allowedRegions = ["北北基", "桃竹苗", "中彰", "雲嘉南", "高屏", "宜蘭", "花東", "支線"];
+const locales = ["zh-TW", "en", "ja"];
+const regionLabels = {
+  北北基: { labels: { "zh-TW": "北北基", en: "Taipei-Keelung", ja: "台北・基隆" } },
+  桃竹苗: { labels: { "zh-TW": "桃竹苗", en: "Taoyuan-Hsinchu-Miaoli", ja: "桃園・新竹・苗栗" } },
+  中彰: { labels: { "zh-TW": "中彰", en: "Taichung-Changhua", ja: "台中・彰化" } },
+  雲嘉南: { labels: { "zh-TW": "雲嘉南", en: "Yunlin-Chiayi-Tainan", ja: "雲林・嘉義・台南" } },
+  高屏: { labels: { "zh-TW": "高屏", en: "Kaohsiung-Pingtung", ja: "高雄・屏東" } },
+  宜蘭: { labels: { "zh-TW": "宜蘭", en: "Yilan", ja: "宜蘭" } },
+  花東: { labels: { "zh-TW": "花東", en: "Hualien-Taitung", ja: "花蓮・台東" } },
+  支線: { labels: { "zh-TW": "支線", en: "Branch Lines", ja: "支線" } },
+};
 
 const branchStationCodes = new Set([
   "1190",
@@ -72,7 +84,21 @@ function parseGps(gps) {
   return { lat, lng };
 }
 
+async function readJaLabels() {
+  try {
+    const data = JSON.parse(await fs.readFile(jaLabelsPath, "utf-8"));
+    return {
+      source: data.source ?? null,
+      labels: data.labels ?? {},
+    };
+  } catch (e) {
+    if (e?.code === "ENOENT") return { source: null, labels: {} };
+    throw e;
+  }
+}
+
 const stations = JSON.parse(await fs.readFile(stationsPath, "utf-8"));
+const jaLabels = await readJaLabels();
 const stationRegions = {
   source: {
     name: "臺鐵車站基本資料集",
@@ -81,14 +107,26 @@ const stationRegions = {
     datasetUrl: "https://data.gov.tw/dataset/33425",
     downloadUrl: "https://ods.railway.gov.tw/tra-ods-web/ods/download/dataResource/0518b833e8964d53bfea3f7691aea0ee",
     localSource: stationsPath,
+    localizedSources: {
+      ja: jaLabels.source,
+    },
   },
+  locales,
   allowedRegions,
+  regionLabels,
   stations: stations.map((station) => {
     const gpsText = String(station.gps ?? "");
+    const stationName = station.stationName ?? "";
+    const stationEName = station.stationEName ?? station.ename ?? "";
     return {
       stationCode: String(station.stationCode),
-      stationName: station.stationName,
-      stationEName: station.stationEName ?? station.ename ?? "",
+      labels: {
+        "zh-TW": stationName,
+        en: stationEName || stationName,
+        ja: jaLabels.labels[String(station.stationCode)] ?? stationName,
+      },
+      stationName,
+      stationEName,
       stationAddrTw: station.stationAddrTw ?? "",
       stationAddrEn: station.stationAddrEn ?? "",
       stationTel: station.stationTel ?? "",

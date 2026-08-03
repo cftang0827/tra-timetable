@@ -5,8 +5,21 @@
     "provider": "國營臺灣鐵路股份有限公司",
     "datasetUrl": "https://data.gov.tw/dataset/33425",
     "downloadUrl": "https://ods.railway.gov.tw/tra-ods-web/ods/download/dataResource/0518b833e8964d53bfea3f7691aea0ee",
-    "localSource": "public/stations.json"
+    "localSource": "public/stations.json",
+    "localizedSources": {
+      "ja": {
+        "name": "台鐵日文站名",
+        "provider": "國營臺灣鐵路股份有限公司",
+        "homeUrl": "https://www.railway.gov.tw/tra-tip-web/tip?lang=JA_JP",
+        "stationInfoUrl": "https://www.railway.gov.tw/tra-tip-web/tip/tip00H/tipH41/viewStaInfo/1000?lang=JA_JP"
+      }
+    }
   },
+  "locales": [
+    "zh-TW",
+    "en",
+    "ja"
+  ],
   "allowedRegions": [
     "北北基",
     "桃竹苗",
@@ -17,9 +30,72 @@
     "花東",
     "支線"
   ],
+  "regionLabels": {
+    "北北基": {
+      "labels": {
+        "zh-TW": "北北基",
+        "en": "Taipei-Keelung",
+        "ja": "台北・基隆"
+      }
+    },
+    "桃竹苗": {
+      "labels": {
+        "zh-TW": "桃竹苗",
+        "en": "Taoyuan-Hsinchu-Miaoli",
+        "ja": "桃園・新竹・苗栗"
+      }
+    },
+    "中彰": {
+      "labels": {
+        "zh-TW": "中彰",
+        "en": "Taichung-Changhua",
+        "ja": "台中・彰化"
+      }
+    },
+    "雲嘉南": {
+      "labels": {
+        "zh-TW": "雲嘉南",
+        "en": "Yunlin-Chiayi-Tainan",
+        "ja": "雲林・嘉義・台南"
+      }
+    },
+    "高屏": {
+      "labels": {
+        "zh-TW": "高屏",
+        "en": "Kaohsiung-Pingtung",
+        "ja": "高雄・屏東"
+      }
+    },
+    "宜蘭": {
+      "labels": {
+        "zh-TW": "宜蘭",
+        "en": "Yilan",
+        "ja": "宜蘭"
+      }
+    },
+    "花東": {
+      "labels": {
+        "zh-TW": "花東",
+        "en": "Hualien-Taitung",
+        "ja": "花蓮・台東"
+      }
+    },
+    "支線": {
+      "labels": {
+        "zh-TW": "支線",
+        "en": "Branch Lines",
+        "ja": "支線"
+      }
+    }
+  },
   "stations": [
     {
       "stationCode": "0900",
+      "labels": {
+        "zh-TW": "基隆",
+        "en": "Keelung",
+        "ja": "基隆"
+      },
       "stationName": "基隆",
       "stationEName": "Keelung",
       "stationAddrTw": "基隆市中山區中山一路 16 之 1 號",
@@ -34,6 +110,11 @@
     },
     {
       "stationCode": "0910",
+      "labels": {
+        "zh-TW": "三坑",
+        "en": "Sankeng",
+        "ja": "三坑"
+      },
       "stationName": "三坑",
       "stationEName": "Sankeng",
       "stationAddrTw": "基隆市仁愛區德厚里龍安街 206 號",
@@ -48,6 +129,11 @@
     },
     {
       "stationCode": "0920",
+      "labels": {
+        "zh-TW": "八堵",
+        "en": "Badu",
+        "ja": "八堵"
+      },
       "stationName": "八堵",
       "stationEName": "Badu",
       "stationAddrTw": "基隆市暖暖區八南里八堵路 142 號",
@@ -62,6 +148,11 @@
     },
     {
       "stationCode": "0930",
+      "labels": {
+        "zh-TW": "七堵",
+        "en": "Qidu",
+        "ja": "七堵"
+      },
       "stationName": "七堵",
       "stationEName": "Qidu",
       "stationAddrTw": "基隆市七堵區長興里東新街 2 號",
@@ -76,6 +167,11 @@
     },
     {
       "stationCode": "0940",
+      "labels": {
+        "zh-TW": "百福",
+        "en": "Baifu",
+        "ja": "百福"
+      },
       "stationName": "百福",
       "stationEName": "Baifu",
       "stationAddrTw": "基隆市七堵區堵南里明德三路 1 之 1 號",
@@ -90,6 +186,11 @@
     },
     {
       "stationCode": "0950",
+      "labels": {
+        "zh-TW": "五堵",
+        "en": "Wudu",
+        "ja": "五堵"
+      },
       "stationName": "五堵",
       "stationEName": "Wudu",
       "stationAddrTw": "新北市汐止區長安里長安路 17 號",
@@ -104,6 +205,11 @@
     },
     {
       "stationCode": "0960",
+      "labels": {
+        "zh-TW": "汐止",
+        "en": "Xizhi",
+        "ja": "汐止"
+      },
       "stationName": "汐止",
       "stationEName": "Xizhi",
       "stationAddrTw": "新北市汐止區信望里信義路 1 號",
@@ -118,6 +224,11 @@
     },
     {
       "stationCode": "0970",
+      "labels": {
+        "zh-TW": "汐科",
+        "en": "Xike",
+        "ja": "汐科"
+      },
       "stationName": "汐科",
       "stationEName": "Xike",
       "stationAddrTw": "新北市汐止區大同里大同路二段 182 號",
@@ -132,6 +243,11 @@
     },
     {
       "stationCode": "0980",
+      "labels": {
+        "zh-TW": "南港",
+        "en": "Nangang",
+        "ja": "南港"
+      },
       "stationName": "南港",
       "stationEName": "Nangang",
       "stationAddrTw": "臺北市南港區南港里南港路一段 313 號 B2",
@@ -146,6 +262,11 @@
     },
     {
       "stationCode": "0990",
+      "labels": {
+        "zh-TW": "松山",
+        "en": "Songshan",
+        "ja": "松山"
+      },
       "stationName": "松山",
       "stationEName": "Songshan",
       "stationAddrTw": "臺北市信義區松山路 11 號B1",
@@ -160,6 +281,11 @@
     },
     {
       "stationCode": "1000",
+      "labels": {
+        "zh-TW": "臺北",
+        "en": "Taipei",
+        "ja": "台北"
+      },
       "stationName": "臺北",
       "stationEName": "Taipei",
       "stationAddrTw": "臺北市中正區黎明里北平西路 3 號",
@@ -174,6 +300,11 @@
     },
     {
       "stationCode": "1001",
+      "labels": {
+        "zh-TW": "臺北-環島",
+        "en": "Taipei Surround Island",
+        "ja": "台北サラウンドアイランド"
+      },
       "stationName": "臺北-環島",
       "stationEName": "Taipei Surround Island",
       "stationAddrTw": "臺北市中正區",
@@ -188,6 +319,11 @@
     },
     {
       "stationCode": "1010",
+      "labels": {
+        "zh-TW": "萬華",
+        "en": "Wanhua",
+        "ja": "萬華"
+      },
       "stationName": "萬華",
       "stationEName": "Wanhua",
       "stationAddrTw": "臺北市萬華區富福里康定路 382 號",
@@ -202,6 +338,11 @@
     },
     {
       "stationCode": "1020",
+      "labels": {
+        "zh-TW": "板橋",
+        "en": "Banqiao",
+        "ja": "板橋"
+      },
       "stationName": "板橋",
       "stationEName": "Banqiao",
       "stationAddrTw": "新北市板橋區新民里縣民大道二段 7 號（縣民大道側）",
@@ -216,6 +357,11 @@
     },
     {
       "stationCode": "1030",
+      "labels": {
+        "zh-TW": "浮洲",
+        "en": "Fuzhou",
+        "ja": "浮洲"
+      },
       "stationName": "浮洲",
       "stationEName": "Fuzhou",
       "stationAddrTw": "新北市板橋區僑中里僑中二街 156 號",
@@ -230,6 +376,11 @@
     },
     {
       "stationCode": "1040",
+      "labels": {
+        "zh-TW": "樹林",
+        "en": "Shulin",
+        "ja": "樹林"
+      },
       "stationName": "樹林",
       "stationEName": "Shulin",
       "stationAddrTw": "新北市樹林區樹北里鎮前街 112 號",
@@ -244,6 +395,11 @@
     },
     {
       "stationCode": "1050",
+      "labels": {
+        "zh-TW": "南樹林",
+        "en": "South Shulin",
+        "ja": "南樹林"
+      },
       "stationName": "南樹林",
       "stationEName": "South Shulin",
       "stationAddrTw": "新北市樹林區東山里中山路二段 230 號",
@@ -258,6 +414,11 @@
     },
     {
       "stationCode": "1060",
+      "labels": {
+        "zh-TW": "山佳",
+        "en": "Shanjia",
+        "ja": "山佳"
+      },
       "stationName": "山佳",
       "stationEName": "Shanjia",
       "stationAddrTw": "新北市樹林區中山路三段108號",
@@ -272,6 +433,11 @@
     },
     {
       "stationCode": "1070",
+      "labels": {
+        "zh-TW": "鶯歌",
+        "en": "Yingge",
+        "ja": "鶯歌"
+      },
       "stationName": "鶯歌",
       "stationEName": "Yingge",
       "stationAddrTw": "新北市鶯歌區東鶯里文化路 68-1號",
@@ -286,6 +452,11 @@
     },
     {
       "stationCode": "1075",
+      "labels": {
+        "zh-TW": "鳳鳴",
+        "en": "Fengming",
+        "ja": "鳳鳴"
+      },
       "stationName": "鳳鳴",
       "stationEName": "Fengming",
       "stationAddrTw": "新北市鶯歌區鳳鳴里鳳一路 2 號",
@@ -300,6 +471,11 @@
     },
     {
       "stationCode": "1080",
+      "labels": {
+        "zh-TW": "桃園",
+        "en": "Taoyuan",
+        "ja": "桃園"
+      },
       "stationName": "桃園",
       "stationEName": "Taoyuan",
       "stationAddrTw": "桃園市桃園區武陵里中正路 1 號",
@@ -314,6 +490,11 @@
     },
     {
       "stationCode": "1090",
+      "labels": {
+        "zh-TW": "內壢",
+        "en": "Neili",
+        "ja": "内壢"
+      },
       "stationName": "內壢",
       "stationEName": "Neili",
       "stationAddrTw": "桃園市中壢區中原里中華路一段 267 號",
@@ -328,6 +509,11 @@
     },
     {
       "stationCode": "1100",
+      "labels": {
+        "zh-TW": "中壢",
+        "en": "Zhongli_Taoyuan",
+        "ja": "中壢"
+      },
       "stationName": "中壢",
       "stationEName": "Zhongli_Taoyuan",
       "stationAddrTw": "桃園市中壢區石頭里中和路 139 號",
@@ -342,6 +528,11 @@
     },
     {
       "stationCode": "1110",
+      "labels": {
+        "zh-TW": "埔心",
+        "en": "Puxin",
+        "ja": "埔心"
+      },
       "stationName": "埔心",
       "stationEName": "Puxin",
       "stationAddrTw": "桃園市楊梅區埔心里永美路 208 號",
@@ -356,6 +547,11 @@
     },
     {
       "stationCode": "1120",
+      "labels": {
+        "zh-TW": "楊梅",
+        "en": "Yangmei",
+        "ja": "楊梅"
+      },
       "stationName": "楊梅",
       "stationEName": "Yangmei",
       "stationAddrTw": "桃園市楊梅區楊梅里大成路 256 號",
@@ -370,6 +566,11 @@
     },
     {
       "stationCode": "1130",
+      "labels": {
+        "zh-TW": "富岡",
+        "en": "Fugang",
+        "ja": "富岡"
+      },
       "stationName": "富岡",
       "stationEName": "Fugang",
       "stationAddrTw": "桃園市楊梅區富岡里成功路 37 號",
@@ -384,6 +585,11 @@
     },
     {
       "stationCode": "1140",
+      "labels": {
+        "zh-TW": "新富",
+        "en": "Xinfu",
+        "ja": "新富"
+      },
       "stationName": "新富",
       "stationEName": "Xinfu",
       "stationAddrTw": "桃園市楊梅區富豐里新明街",
@@ -398,6 +604,11 @@
     },
     {
       "stationCode": "1150",
+      "labels": {
+        "zh-TW": "北湖",
+        "en": "Beihu",
+        "ja": "北湖"
+      },
       "stationName": "北湖",
       "stationEName": "Beihu",
       "stationAddrTw": "新竹縣湖口鄉東興村北湖路 1 號",
@@ -412,6 +623,11 @@
     },
     {
       "stationCode": "1160",
+      "labels": {
+        "zh-TW": "湖口",
+        "en": "Hukou",
+        "ja": "湖口"
+      },
       "stationName": "湖口",
       "stationEName": "Hukou",
       "stationAddrTw": "新竹縣湖口鄉仁勢村中山路二段 121 號",
@@ -426,6 +642,11 @@
     },
     {
       "stationCode": "1170",
+      "labels": {
+        "zh-TW": "新豐",
+        "en": "Xinfeng",
+        "ja": "新豊"
+      },
       "stationName": "新豐",
       "stationEName": "Xinfeng",
       "stationAddrTw": "新竹縣新豐鄉山崎村新興路 202 號",
@@ -440,6 +661,11 @@
     },
     {
       "stationCode": "1180",
+      "labels": {
+        "zh-TW": "竹北",
+        "en": "Zhubei",
+        "ja": "竹北"
+      },
       "stationName": "竹北",
       "stationEName": "Zhubei",
       "stationAddrTw": "新竹縣竹北市竹義里和平街 59 號",
@@ -454,6 +680,11 @@
     },
     {
       "stationCode": "1190",
+      "labels": {
+        "zh-TW": "北新竹",
+        "en": "North Hsinchu",
+        "ja": "北新竹"
+      },
       "stationName": "北新竹",
       "stationEName": "North Hsinchu",
       "stationAddrTw": "新竹市 東區東園里中華路一段 291 之 2 號",
@@ -468,6 +699,11 @@
     },
     {
       "stationCode": "1191",
+      "labels": {
+        "zh-TW": "千甲",
+        "en": "Qianjia",
+        "ja": "千甲"
+      },
       "stationName": "千甲",
       "stationEName": "Qianjia",
       "stationAddrTw": "新竹市 東區水源里千甲路 142 號",
@@ -482,6 +718,11 @@
     },
     {
       "stationCode": "1192",
+      "labels": {
+        "zh-TW": "新莊",
+        "en": "Xinzhuang",
+        "ja": "新荘"
+      },
       "stationName": "新莊",
       "stationEName": "Xinzhuang",
       "stationAddrTw": "新竹市 東區新莊里關東路 310 號",
@@ -496,6 +737,11 @@
     },
     {
       "stationCode": "1193",
+      "labels": {
+        "zh-TW": "竹中",
+        "en": "Zhuzhong",
+        "ja": "竹中"
+      },
       "stationName": "竹中",
       "stationEName": "Zhuzhong",
       "stationAddrTw": "新竹縣竹東鎮頭重里竹中路 145 號",
@@ -510,6 +756,11 @@
     },
     {
       "stationCode": "1194",
+      "labels": {
+        "zh-TW": "六家",
+        "en": "Liujia",
+        "ja": "六家"
+      },
       "stationName": "六家",
       "stationEName": "Liujia",
       "stationAddrTw": "新竹縣竹北市隘口里復興三路二段 229 號",
@@ -524,6 +775,11 @@
     },
     {
       "stationCode": "1201",
+      "labels": {
+        "zh-TW": "上員",
+        "en": "Shangyuan",
+        "ja": "上員"
+      },
       "stationName": "上員",
       "stationEName": "Shangyuan",
       "stationAddrTw": "新竹縣竹東鎮上員里光明路 (無站房)",
@@ -538,6 +794,11 @@
     },
     {
       "stationCode": "1202",
+      "labels": {
+        "zh-TW": "榮華",
+        "en": "Ronghua",
+        "ja": "栄華"
+      },
       "stationName": "榮華",
       "stationEName": "Ronghua",
       "stationAddrTw": "新竹縣竹東鎮仁愛里北興路 (無站房)",
@@ -552,6 +813,11 @@
     },
     {
       "stationCode": "1203",
+      "labels": {
+        "zh-TW": "竹東",
+        "en": "Zhudong",
+        "ja": "竹東"
+      },
       "stationName": "竹東",
       "stationEName": "Zhudong",
       "stationAddrTw": "新竹縣竹東鎮雞林里東林路 196 號",
@@ -566,6 +832,11 @@
     },
     {
       "stationCode": "1204",
+      "labels": {
+        "zh-TW": "橫山",
+        "en": "Hengshan",
+        "ja": "横山"
+      },
       "stationName": "橫山",
       "stationEName": "Hengshan",
       "stationAddrTw": "新竹縣橫山鄉橫山村橫山路 97 號 (無站房)",
@@ -580,6 +851,11 @@
     },
     {
       "stationCode": "1205",
+      "labels": {
+        "zh-TW": "九讚頭",
+        "en": "Jiuzantou",
+        "ja": "九讃頭"
+      },
       "stationName": "九讚頭",
       "stationEName": "Jiuzantou",
       "stationAddrTw": "新竹縣橫山鄉大肚村中豐路二段 286 巷 29 號",
@@ -594,6 +870,11 @@
     },
     {
       "stationCode": "1206",
+      "labels": {
+        "zh-TW": "合興",
+        "en": "Hexing",
+        "ja": "合興"
+      },
       "stationName": "合興",
       "stationEName": "Hexing",
       "stationAddrTw": "新竹縣橫山鄉力行村中山街一段 17 號",
@@ -608,6 +889,11 @@
     },
     {
       "stationCode": "1207",
+      "labels": {
+        "zh-TW": "富貴",
+        "en": "Fugui",
+        "ja": "富貴"
+      },
       "stationName": "富貴",
       "stationEName": "Fugui",
       "stationAddrTw": "新竹縣橫山鄉豐田村中山街一段 (無站房)",
@@ -622,6 +908,11 @@
     },
     {
       "stationCode": "1208",
+      "labels": {
+        "zh-TW": "內灣",
+        "en": "Neiwan",
+        "ja": "内湾"
+      },
       "stationName": "內灣",
       "stationEName": "Neiwan",
       "stationAddrTw": "新竹縣橫山鄉內灣村中正路 6 號",
@@ -636,6 +927,11 @@
     },
     {
       "stationCode": "1210",
+      "labels": {
+        "zh-TW": "新竹",
+        "en": "Hsinchu",
+        "ja": "新竹"
+      },
       "stationName": "新竹",
       "stationEName": "Hsinchu",
       "stationAddrTw": "新竹市 東區榮光里中華路二段 445 號",
@@ -650,6 +946,11 @@
     },
     {
       "stationCode": "1220",
+      "labels": {
+        "zh-TW": "三姓橋",
+        "en": "Sanxingqiao",
+        "ja": "三姓橋"
+      },
       "stationName": "三姓橋",
       "stationEName": "Sanxingqiao",
       "stationAddrTw": "新竹市 香山區香山里元培街 32 巷 30 號",
@@ -664,6 +965,11 @@
     },
     {
       "stationCode": "1230",
+      "labels": {
+        "zh-TW": "香山",
+        "en": "Xiangshan",
+        "ja": "香山"
+      },
       "stationName": "香山",
       "stationEName": "Xiangshan",
       "stationAddrTw": "新竹市 香山區朝山里中華路五段 347 巷 2 弄 27 號",
@@ -678,6 +984,11 @@
     },
     {
       "stationCode": "1240",
+      "labels": {
+        "zh-TW": "崎頂",
+        "en": "Qiding",
+        "ja": "崎頂"
+      },
       "stationName": "崎頂",
       "stationEName": "Qiding",
       "stationAddrTw": "苗栗縣竹南鎮崎頂里北戶 55 號",
@@ -692,6 +1003,11 @@
     },
     {
       "stationCode": "1250",
+      "labels": {
+        "zh-TW": "竹南",
+        "en": "Zhunan",
+        "ja": "竹南"
+      },
       "stationName": "竹南",
       "stationEName": "Zhunan",
       "stationAddrTw": "苗栗縣竹南鎮竹南里中山路 166 號",
@@ -706,6 +1022,11 @@
     },
     {
       "stationCode": "1998",
+      "labels": {
+        "zh-TW": "樹林調車場",
+        "en": "Shulin Rail Yard",
+        "ja": "樹林操車場"
+      },
       "stationName": "樹林調車場",
       "stationEName": "Shulin Rail Yard",
       "stationAddrTw": "",
@@ -717,6 +1038,11 @@
     },
     {
       "stationCode": "2110",
+      "labels": {
+        "zh-TW": "談文",
+        "en": "Tanwen",
+        "ja": "談文"
+      },
       "stationName": "談文",
       "stationEName": "Tanwen",
       "stationAddrTw": "苗栗縣造橋鄉談文村仁愛路 29 號",
@@ -731,6 +1057,11 @@
     },
     {
       "stationCode": "2120",
+      "labels": {
+        "zh-TW": "大山",
+        "en": "Dashan",
+        "ja": "大山"
+      },
       "stationName": "大山",
       "stationEName": "Dashan",
       "stationAddrTw": "苗栗縣後龍鎮大山里明山路 180 號",
@@ -745,6 +1076,11 @@
     },
     {
       "stationCode": "2130",
+      "labels": {
+        "zh-TW": "後龍",
+        "en": "Houlong",
+        "ja": "後龍"
+      },
       "stationName": "後龍",
       "stationEName": "Houlong",
       "stationAddrTw": "苗栗縣後龍鎮北龍里車站街 127-2 號",
@@ -759,6 +1095,11 @@
     },
     {
       "stationCode": "2140",
+      "labels": {
+        "zh-TW": "龍港",
+        "en": "Longgang",
+        "ja": "龍港"
+      },
       "stationName": "龍港",
       "stationEName": "Longgang",
       "stationAddrTw": "苗栗縣後龍鎮龍津里7鄰公司寮 85 號",
@@ -773,6 +1114,11 @@
     },
     {
       "stationCode": "2150",
+      "labels": {
+        "zh-TW": "白沙屯",
+        "en": "Baishatun",
+        "ja": "白沙屯"
+      },
       "stationName": "白沙屯",
       "stationEName": "Baishatun",
       "stationAddrTw": "苗栗縣通霄鎮白西里白西 131 號",
@@ -787,6 +1133,11 @@
     },
     {
       "stationCode": "2160",
+      "labels": {
+        "zh-TW": "新埔",
+        "en": "Xinpu",
+        "ja": "新埔"
+      },
       "stationName": "新埔",
       "stationEName": "Xinpu",
       "stationAddrTw": "苗栗縣通霄鎮新埔里新埔 57 號",
@@ -801,6 +1152,11 @@
     },
     {
       "stationCode": "2170",
+      "labels": {
+        "zh-TW": "通霄",
+        "en": "Tongxiao",
+        "ja": "通宵"
+      },
       "stationName": "通霄",
       "stationEName": "Tongxiao",
       "stationAddrTw": "苗栗縣通霄鎮通西里中正路 109 號",
@@ -815,6 +1171,11 @@
     },
     {
       "stationCode": "2180",
+      "labels": {
+        "zh-TW": "苑裡",
+        "en": "Yuanli",
+        "ja": "苑裡"
+      },
       "stationName": "苑裡",
       "stationEName": "Yuanli",
       "stationAddrTw": "苗栗縣苑裡鎮苑北里中山路 165 號",
@@ -829,6 +1190,11 @@
     },
     {
       "stationCode": "2190",
+      "labels": {
+        "zh-TW": "日南",
+        "en": "Rinan",
+        "ja": "日南"
+      },
       "stationName": "日南",
       "stationEName": "Rinan",
       "stationAddrTw": "臺中市大甲區孟春里中山路二段 140 巷 8 號",
@@ -843,6 +1209,11 @@
     },
     {
       "stationCode": "2200",
+      "labels": {
+        "zh-TW": "大甲",
+        "en": "Dajia",
+        "ja": "大甲"
+      },
       "stationName": "大甲",
       "stationEName": "Dajia",
       "stationAddrTw": "臺中市大甲區大甲里中山路一段 828 號",
@@ -857,6 +1228,11 @@
     },
     {
       "stationCode": "2210",
+      "labels": {
+        "zh-TW": "臺中港",
+        "en": "Taichung Port",
+        "ja": "台中港"
+      },
       "stationName": "臺中港",
       "stationEName": "Taichung Port",
       "stationAddrTw": "臺中市清水區頂湳里甲南路 2 號",
@@ -871,6 +1247,11 @@
     },
     {
       "stationCode": "2220",
+      "labels": {
+        "zh-TW": "清水",
+        "en": "Qingshui",
+        "ja": "清水"
+      },
       "stationName": "清水",
       "stationEName": "Qingshui",
       "stationAddrTw": "臺中市清水區南社里中正街 115 號",
@@ -885,6 +1266,11 @@
     },
     {
       "stationCode": "2230",
+      "labels": {
+        "zh-TW": "沙鹿",
+        "en": "Shalu",
+        "ja": "沙鹿"
+      },
       "stationName": "沙鹿",
       "stationEName": "Shalu",
       "stationAddrTw": "臺中市沙鹿區沙鹿里中正街 94 號",
@@ -899,6 +1285,11 @@
     },
     {
       "stationCode": "2240",
+      "labels": {
+        "zh-TW": "龍井",
+        "en": "Longjing",
+        "ja": "龍井"
+      },
       "stationName": "龍井",
       "stationEName": "Longjing",
       "stationAddrTw": "臺中市龍井區龍泉里龍新路 1 號",
@@ -913,6 +1304,11 @@
     },
     {
       "stationCode": "2250",
+      "labels": {
+        "zh-TW": "大肚",
+        "en": "Dadu",
+        "ja": "大肚"
+      },
       "stationName": "大肚",
       "stationEName": "Dadu",
       "stationAddrTw": "臺中市大肚區頂街里平和街 121 號",
@@ -927,6 +1323,11 @@
     },
     {
       "stationCode": "2260",
+      "labels": {
+        "zh-TW": "追分",
+        "en": "Zhuifen",
+        "ja": "追分"
+      },
       "stationName": "追分",
       "stationEName": "Zhuifen",
       "stationAddrTw": "臺中市大肚區王田里追分街 13 號",
@@ -941,6 +1342,11 @@
     },
     {
       "stationCode": "3140",
+      "labels": {
+        "zh-TW": "造橋",
+        "en": "Zaoqiao",
+        "ja": "造橋"
+      },
       "stationName": "造橋",
       "stationEName": "Zaoqiao",
       "stationAddrTw": "苗栗縣造橋鄉造橋村平仁路 54 號",
@@ -955,6 +1361,11 @@
     },
     {
       "stationCode": "3150",
+      "labels": {
+        "zh-TW": "豐富",
+        "en": "Fengfu",
+        "ja": "豊富"
+      },
       "stationName": "豐富",
       "stationEName": "Fengfu",
       "stationAddrTw": "苗栗縣後龍鎮校椅里高鐵一路 66 號",
@@ -969,6 +1380,11 @@
     },
     {
       "stationCode": "3160",
+      "labels": {
+        "zh-TW": "苗栗",
+        "en": "Miaoli",
+        "ja": "苗栗"
+      },
       "stationName": "苗栗",
       "stationEName": "Miaoli",
       "stationAddrTw": "苗栗縣苗栗市上苗里為公路 1 號",
@@ -983,6 +1399,11 @@
     },
     {
       "stationCode": "3170",
+      "labels": {
+        "zh-TW": "南勢",
+        "en": "Nanshi",
+        "ja": "南勢"
+      },
       "stationName": "南勢",
       "stationEName": "Nanshi",
       "stationAddrTw": "苗栗縣苗栗市新英里南勢 39 號",
@@ -997,6 +1418,11 @@
     },
     {
       "stationCode": "3180",
+      "labels": {
+        "zh-TW": "銅鑼",
+        "en": "Tongluo",
+        "ja": "銅羅"
+      },
       "stationName": "銅鑼",
       "stationEName": "Tongluo",
       "stationAddrTw": "苗栗縣銅鑼鄉銅鑼村大同路13號",
@@ -1011,6 +1437,11 @@
     },
     {
       "stationCode": "3190",
+      "labels": {
+        "zh-TW": "三義",
+        "en": "Sanyi",
+        "ja": "三義"
+      },
       "stationName": "三義",
       "stationEName": "Sanyi",
       "stationAddrTw": "苗栗縣三義鄉雙湖村雙湖 90 號",
@@ -1025,6 +1456,11 @@
     },
     {
       "stationCode": "3210",
+      "labels": {
+        "zh-TW": "泰安",
+        "en": "Tai'an",
+        "ja": "泰安"
+      },
       "stationName": "泰安",
       "stationEName": "Tai'an",
       "stationAddrTw": "臺中市后里區泰安里安眉路 37 之 12 號",
@@ -1039,6 +1475,11 @@
     },
     {
       "stationCode": "3220",
+      "labels": {
+        "zh-TW": "后里",
+        "en": "Houli",
+        "ja": "后里"
+      },
       "stationName": "后里",
       "stationEName": "Houli",
       "stationAddrTw": "臺中市后里區義里里甲后路一段 1 號",
@@ -1053,6 +1494,11 @@
     },
     {
       "stationCode": "3230",
+      "labels": {
+        "zh-TW": "豐原",
+        "en": "Fengyuan",
+        "ja": "豊原"
+      },
       "stationName": "豐原",
       "stationEName": "Fengyuan",
       "stationAddrTw": "臺中市豐原區豐原里中正路 1-1號",
@@ -1067,6 +1513,11 @@
     },
     {
       "stationCode": "3240",
+      "labels": {
+        "zh-TW": "栗林",
+        "en": "Lilin",
+        "ja": "栗林"
+      },
       "stationName": "栗林",
       "stationEName": "Lilin",
       "stationAddrTw": "臺中市潭子區潭豐路二段747號",
@@ -1081,6 +1532,11 @@
     },
     {
       "stationCode": "3250",
+      "labels": {
+        "zh-TW": "潭子",
+        "en": "Tanzi",
+        "ja": "潭子"
+      },
       "stationName": "潭子",
       "stationEName": "Tanzi",
       "stationAddrTw": "臺中市潭子區中山路二段352-1號",
@@ -1095,6 +1551,11 @@
     },
     {
       "stationCode": "3260",
+      "labels": {
+        "zh-TW": "頭家厝",
+        "en": "Toujiacuo",
+        "ja": "頭家厝"
+      },
       "stationName": "頭家厝",
       "stationEName": "Toujiacuo",
       "stationAddrTw": "臺中市潭子區頭張東路43巷8號",
@@ -1109,6 +1570,11 @@
     },
     {
       "stationCode": "3270",
+      "labels": {
+        "zh-TW": "松竹",
+        "en": "Songzhu",
+        "ja": "松竹"
+      },
       "stationName": "松竹",
       "stationEName": "Songzhu",
       "stationAddrTw": "臺中市北屯區舊社里松竹路一段1473巷100號",
@@ -1123,6 +1589,11 @@
     },
     {
       "stationCode": "3280",
+      "labels": {
+        "zh-TW": "太原",
+        "en": "Taiyuan",
+        "ja": "太原"
+      },
       "stationName": "太原",
       "stationEName": "Taiyuan",
       "stationAddrTw": "臺中市北屯區北興里東光路 665 號",
@@ -1137,6 +1608,11 @@
     },
     {
       "stationCode": "3290",
+      "labels": {
+        "zh-TW": "精武",
+        "en": "Jingwu",
+        "ja": "精武"
+      },
       "stationName": "精武",
       "stationEName": "Jingwu",
       "stationAddrTw": "臺中市東區東南里東光路 161號",
@@ -1151,6 +1627,11 @@
     },
     {
       "stationCode": "3300",
+      "labels": {
+        "zh-TW": "臺中",
+        "en": "Taichung",
+        "ja": "台中"
+      },
       "stationName": "臺中",
       "stationEName": "Taichung",
       "stationAddrTw": "臺中市中區綠川里臺灣大道一段 1 號",
@@ -1165,6 +1646,11 @@
     },
     {
       "stationCode": "3310",
+      "labels": {
+        "zh-TW": "五權",
+        "en": "Wuquan",
+        "ja": "五権"
+      },
       "stationName": "五權",
       "stationEName": "Wuquan",
       "stationAddrTw": "臺中市南區建國南路二段201號",
@@ -1179,6 +1665,11 @@
     },
     {
       "stationCode": "3320",
+      "labels": {
+        "zh-TW": "大慶",
+        "en": "Daqing",
+        "ja": "大慶"
+      },
       "stationName": "大慶",
       "stationEName": "Daqing",
       "stationAddrTw": "臺中市南區樹德里7鄰大慶街2段130號",
@@ -1193,6 +1684,11 @@
     },
     {
       "stationCode": "3330",
+      "labels": {
+        "zh-TW": "烏日",
+        "en": "Wuri",
+        "ja": "烏日"
+      },
       "stationName": "烏日",
       "stationEName": "Wuri",
       "stationAddrTw": "臺中市烏日區烏日里三民街 258 號",
@@ -1207,6 +1703,11 @@
     },
     {
       "stationCode": "3340",
+      "labels": {
+        "zh-TW": "新烏日",
+        "en": "Xinwuri",
+        "ja": "新烏日"
+      },
       "stationName": "新烏日",
       "stationEName": "Xinwuri",
       "stationAddrTw": "臺中市烏日區三和里高鐵東一路 26 號",
@@ -1221,6 +1722,11 @@
     },
     {
       "stationCode": "3350",
+      "labels": {
+        "zh-TW": "成功",
+        "en": "Chenggong",
+        "ja": "成功"
+      },
       "stationName": "成功",
       "stationEName": "Chenggong",
       "stationAddrTw": "臺中市烏日區榮泉里中山路三段 550 號",
@@ -1235,6 +1741,11 @@
     },
     {
       "stationCode": "3360",
+      "labels": {
+        "zh-TW": "彰化",
+        "en": "Changhua",
+        "ja": "彰化"
+      },
       "stationName": "彰化",
       "stationEName": "Changhua",
       "stationAddrTw": "彰化縣彰化市長樂里三民路 1 號",
@@ -1249,6 +1760,11 @@
     },
     {
       "stationCode": "3370",
+      "labels": {
+        "zh-TW": "花壇",
+        "en": "Huatan",
+        "ja": "花壇"
+      },
       "stationName": "花壇",
       "stationEName": "Huatan",
       "stationAddrTw": "彰化縣花壇鄉花壇村中正路 370 號",
@@ -1263,6 +1779,11 @@
     },
     {
       "stationCode": "3380",
+      "labels": {
+        "zh-TW": "大村",
+        "en": "Dacun",
+        "ja": "大村"
+      },
       "stationName": "大村",
       "stationEName": "Dacun",
       "stationAddrTw": "彰化縣大村鄉過溝村福進路 100 號",
@@ -1277,6 +1798,11 @@
     },
     {
       "stationCode": "3390",
+      "labels": {
+        "zh-TW": "員林",
+        "en": "Yuanlin",
+        "ja": "員林"
+      },
       "stationName": "員林",
       "stationEName": "Yuanlin",
       "stationAddrTw": "彰化縣員林市和平里民權街 55 號",
@@ -1291,6 +1817,11 @@
     },
     {
       "stationCode": "3400",
+      "labels": {
+        "zh-TW": "永靖",
+        "en": "Yongjing",
+        "ja": "永靖"
+      },
       "stationName": "永靖",
       "stationEName": "Yongjing",
       "stationAddrTw": "彰化縣永靖鄉崙子村崙饒路25 號",
@@ -1305,6 +1836,11 @@
     },
     {
       "stationCode": "3410",
+      "labels": {
+        "zh-TW": "社頭",
+        "en": "Shetou",
+        "ja": "社頭"
+      },
       "stationName": "社頭",
       "stationEName": "Shetou",
       "stationAddrTw": "彰化縣社頭鄉廣興村社站路 10 號",
@@ -1319,6 +1855,11 @@
     },
     {
       "stationCode": "3420",
+      "labels": {
+        "zh-TW": "田中",
+        "en": "Tianzhong",
+        "ja": "田中"
+      },
       "stationName": "田中",
       "stationEName": "Tianzhong",
       "stationAddrTw": "彰化縣田中鎮中路里中州路一段 1 號",
@@ -1333,6 +1874,11 @@
     },
     {
       "stationCode": "3430",
+      "labels": {
+        "zh-TW": "二水",
+        "en": "Ershui",
+        "ja": "二水"
+      },
       "stationName": "二水",
       "stationEName": "Ershui",
       "stationAddrTw": "彰化縣二水鄉光化村光文路 1 號",
@@ -1347,6 +1893,11 @@
     },
     {
       "stationCode": "3431",
+      "labels": {
+        "zh-TW": "源泉",
+        "en": "Yuanquan",
+        "ja": "源泉"
+      },
       "stationName": "源泉",
       "stationEName": "Yuanquan",
       "stationAddrTw": "彰化縣二水鄉合興村英義路 (無站房)",
@@ -1361,6 +1912,11 @@
     },
     {
       "stationCode": "3432",
+      "labels": {
+        "zh-TW": "濁水",
+        "en": "Zhuoshui",
+        "ja": "濁水"
+      },
       "stationName": "濁水",
       "stationEName": "Zhuoshui",
       "stationAddrTw": "南投縣名間鄉濁水村車站路 15 號",
@@ -1375,6 +1931,11 @@
     },
     {
       "stationCode": "3433",
+      "labels": {
+        "zh-TW": "龍泉",
+        "en": "Longquan",
+        "ja": "龍泉"
+      },
       "stationName": "龍泉",
       "stationEName": "Longquan",
       "stationAddrTw": "南投縣集集鎮隘寮村龍泉巷 (無站房)",
@@ -1389,6 +1950,11 @@
     },
     {
       "stationCode": "3434",
+      "labels": {
+        "zh-TW": "集集",
+        "en": "Jiji",
+        "ja": "集集"
+      },
       "stationName": "集集",
       "stationEName": "Jiji",
       "stationAddrTw": "南投縣集集鎮吳厝里民生路 75 號",
@@ -1403,6 +1969,11 @@
     },
     {
       "stationCode": "3435",
+      "labels": {
+        "zh-TW": "水里",
+        "en": "Shuili",
+        "ja": "水里"
+      },
       "stationName": "水里",
       "stationEName": "Shuili",
       "stationAddrTw": "南投縣水里鄉水里村民生路 440 號",
@@ -1417,6 +1988,11 @@
     },
     {
       "stationCode": "3436",
+      "labels": {
+        "zh-TW": "車埕",
+        "en": "Checheng",
+        "ja": "車埕"
+      },
       "stationName": "車埕",
       "stationEName": "Checheng",
       "stationAddrTw": "南投縣水里鄉車埕村民權巷 2 號",
@@ -1431,6 +2007,11 @@
     },
     {
       "stationCode": "3450",
+      "labels": {
+        "zh-TW": "林內",
+        "en": "Linnei",
+        "ja": "林内"
+      },
       "stationName": "林內",
       "stationEName": "Linnei",
       "stationAddrTw": "雲林縣林內鄉林中村中山路 42 號",
@@ -1445,6 +2026,11 @@
     },
     {
       "stationCode": "3460",
+      "labels": {
+        "zh-TW": "石榴",
+        "en": "Shiliu",
+        "ja": "石榴"
+      },
       "stationName": "石榴",
       "stationEName": "Shiliu",
       "stationAddrTw": "雲林縣斗六市榴北里文明路 31 號",
@@ -1459,6 +2045,11 @@
     },
     {
       "stationCode": "3470",
+      "labels": {
+        "zh-TW": "斗六",
+        "en": "Douliu",
+        "ja": "斗六"
+      },
       "stationName": "斗六",
       "stationEName": "Douliu",
       "stationAddrTw": "雲林縣斗六市信義里民生路 187 號",
@@ -1473,6 +2064,11 @@
     },
     {
       "stationCode": "3480",
+      "labels": {
+        "zh-TW": "斗南",
+        "en": "Dounan",
+        "ja": "斗南"
+      },
       "stationName": "斗南",
       "stationEName": "Dounan",
       "stationAddrTw": "雲林縣斗南鎮南昌里中山路 2 號",
@@ -1487,6 +2083,11 @@
     },
     {
       "stationCode": "3490",
+      "labels": {
+        "zh-TW": "石龜",
+        "en": "Shigui",
+        "ja": "石亀"
+      },
       "stationName": "石龜",
       "stationEName": "Shigui",
       "stationAddrTw": "雲林縣斗南鎮石龜里",
@@ -1501,6 +2102,11 @@
     },
     {
       "stationCode": "4050",
+      "labels": {
+        "zh-TW": "大林",
+        "en": "Dalin",
+        "ja": "大林"
+      },
       "stationName": "大林",
       "stationEName": "Dalin",
       "stationAddrTw": "嘉義縣大林鎮吉林里中山路 2 號",
@@ -1515,6 +2121,11 @@
     },
     {
       "stationCode": "4060",
+      "labels": {
+        "zh-TW": "民雄",
+        "en": "Minxiong",
+        "ja": "民雄"
+      },
       "stationName": "民雄",
       "stationEName": "Minxiong",
       "stationAddrTw": "嘉義縣民雄鄉東榮村和平路 2 號",
@@ -1529,6 +2140,11 @@
     },
     {
       "stationCode": "4070",
+      "labels": {
+        "zh-TW": "嘉北",
+        "en": "Jiabei",
+        "ja": "嘉北"
+      },
       "stationName": "嘉北",
       "stationEName": "Jiabei",
       "stationAddrTw": "嘉義市 東區後湖里保建街 110 號",
@@ -1543,6 +2159,11 @@
     },
     {
       "stationCode": "4080",
+      "labels": {
+        "zh-TW": "嘉義",
+        "en": "Chiayi",
+        "ja": "嘉義"
+      },
       "stationName": "嘉義",
       "stationEName": "Chiayi",
       "stationAddrTw": "嘉義市 西區番社里中山路 528 號",
@@ -1557,6 +2178,11 @@
     },
     {
       "stationCode": "4090",
+      "labels": {
+        "zh-TW": "水上",
+        "en": "Shuishang",
+        "ja": "水上"
+      },
       "stationName": "水上",
       "stationEName": "Shuishang",
       "stationAddrTw": "嘉義縣水上鄉粗溪村68號",
@@ -1571,6 +2197,11 @@
     },
     {
       "stationCode": "4100",
+      "labels": {
+        "zh-TW": "南靖",
+        "en": "Nanjing",
+        "ja": "南靖"
+      },
       "stationName": "南靖",
       "stationEName": "Nanjing",
       "stationAddrTw": "嘉義縣水上鄉三鎮村三鎮路 26 號",
@@ -1585,6 +2216,11 @@
     },
     {
       "stationCode": "4110",
+      "labels": {
+        "zh-TW": "後壁",
+        "en": "Houbi",
+        "ja": "後壁"
+      },
       "stationName": "後壁",
       "stationEName": "Houbi",
       "stationAddrTw": "臺南市後壁區後壁里後壁 77 號",
@@ -1599,6 +2235,11 @@
     },
     {
       "stationCode": "4120",
+      "labels": {
+        "zh-TW": "新營",
+        "en": "Xinying",
+        "ja": "新営"
+      },
       "stationName": "新營",
       "stationEName": "Xinying",
       "stationAddrTw": "臺南市新營區中營里中山路 1 號",
@@ -1613,6 +2254,11 @@
     },
     {
       "stationCode": "4130",
+      "labels": {
+        "zh-TW": "柳營",
+        "en": "Liuying",
+        "ja": "柳営"
+      },
       "stationName": "柳營",
       "stationEName": "Liuying",
       "stationAddrTw": "臺南市柳營區東昇里建國路 1 號",
@@ -1627,6 +2273,11 @@
     },
     {
       "stationCode": "4140",
+      "labels": {
+        "zh-TW": "林鳳營",
+        "en": "Linfengying",
+        "ja": "林鳳営"
+      },
       "stationName": "林鳳營",
       "stationEName": "Linfengying",
       "stationAddrTw": "臺南市六甲區中社里林鳳營 16 號",
@@ -1641,6 +2292,11 @@
     },
     {
       "stationCode": "4150",
+      "labels": {
+        "zh-TW": "隆田",
+        "en": "Longtian",
+        "ja": "隆田"
+      },
       "stationName": "隆田",
       "stationEName": "Longtian",
       "stationAddrTw": "臺南市官田區隆田里中山路一段 1 號",
@@ -1655,6 +2311,11 @@
     },
     {
       "stationCode": "4160",
+      "labels": {
+        "zh-TW": "拔林",
+        "en": "Balin",
+        "ja": "抜林"
+      },
       "stationName": "拔林",
       "stationEName": "Balin",
       "stationAddrTw": "臺南市官田區拔林里拔子林 83 之 1 號",
@@ -1669,6 +2330,11 @@
     },
     {
       "stationCode": "4170",
+      "labels": {
+        "zh-TW": "善化",
+        "en": "Shanhua",
+        "ja": "善化"
+      },
       "stationName": "善化",
       "stationEName": "Shanhua",
       "stationAddrTw": "臺南市善化區光文里中山路 1 號",
@@ -1683,6 +2349,11 @@
     },
     {
       "stationCode": "4180",
+      "labels": {
+        "zh-TW": "南科",
+        "en": "Nanke",
+        "ja": "南科"
+      },
       "stationName": "南科",
       "stationEName": "Nanke",
       "stationAddrTw": "臺南市新市區大營里大營 287-300 號",
@@ -1697,6 +2368,11 @@
     },
     {
       "stationCode": "4190",
+      "labels": {
+        "zh-TW": "新市",
+        "en": "Xinshi",
+        "ja": "新市"
+      },
       "stationName": "新市",
       "stationEName": "Xinshi",
       "stationAddrTw": "臺南市新市區新和里中華路 1 號",
@@ -1711,6 +2387,11 @@
     },
     {
       "stationCode": "4200",
+      "labels": {
+        "zh-TW": "永康",
+        "en": "Yongkang",
+        "ja": "永康"
+      },
       "stationName": "永康",
       "stationEName": "Yongkang",
       "stationAddrTw": "臺南市永康區埔園里中山路 459 號",
@@ -1725,6 +2406,11 @@
     },
     {
       "stationCode": "4210",
+      "labels": {
+        "zh-TW": "大橋",
+        "en": "Daqiao",
+        "ja": "大橋"
+      },
       "stationName": "大橋",
       "stationEName": "Daqiao",
       "stationAddrTw": "臺南市永康區西橋里中華路 835 號",
@@ -1739,6 +2425,11 @@
     },
     {
       "stationCode": "4220",
+      "labels": {
+        "zh-TW": "臺南",
+        "en": "Tainan",
+        "ja": "台南"
+      },
       "stationName": "臺南",
       "stationEName": "Tainan",
       "stationAddrTw": "臺南市東區成大里北門路二段4號",
@@ -1753,6 +2444,11 @@
     },
     {
       "stationCode": "4250",
+      "labels": {
+        "zh-TW": "保安",
+        "en": "Bao'an",
+        "ja": "保安"
+      },
       "stationName": "保安",
       "stationEName": "Bao'an",
       "stationAddrTw": "臺南市仁德區保安里文賢路一段 529 巷 10 號",
@@ -1767,6 +2463,11 @@
     },
     {
       "stationCode": "4260",
+      "labels": {
+        "zh-TW": "仁德",
+        "en": "Rende",
+        "ja": "仁徳"
+      },
       "stationName": "仁德",
       "stationEName": "Rende",
       "stationAddrTw": "臺南市仁德區保安里永德路 10 號",
@@ -1781,6 +2482,11 @@
     },
     {
       "stationCode": "4270",
+      "labels": {
+        "zh-TW": "中洲",
+        "en": "Zhongzhou",
+        "ja": "中洲"
+      },
       "stationName": "中洲",
       "stationEName": "Zhongzhou",
       "stationAddrTw": "臺南市仁德區中洲五街236號",
@@ -1795,6 +2501,11 @@
     },
     {
       "stationCode": "4271",
+      "labels": {
+        "zh-TW": "長榮大學",
+        "en": "Chang Jung Christian University",
+        "ja": "長栄大学"
+      },
       "stationName": "長榮大學",
       "stationEName": "Chang Jung Christian University",
       "stationAddrTw": "臺南市歸仁區大潭里長大路15 號",
@@ -1809,6 +2520,11 @@
     },
     {
       "stationCode": "4272",
+      "labels": {
+        "zh-TW": "沙崙",
+        "en": "Shalun",
+        "ja": "沙崙"
+      },
       "stationName": "沙崙",
       "stationEName": "Shalun",
       "stationAddrTw": "臺南市歸仁區沙崙里歸仁大道 102 號",
@@ -1823,6 +2539,11 @@
     },
     {
       "stationCode": "4290",
+      "labels": {
+        "zh-TW": "大湖",
+        "en": "Dahu",
+        "ja": "大湖"
+      },
       "stationName": "大湖",
       "stationEName": "Dahu",
       "stationAddrTw": "高雄市路竹區甲南里天祐路 24 號",
@@ -1837,6 +2558,11 @@
     },
     {
       "stationCode": "4300",
+      "labels": {
+        "zh-TW": "路竹",
+        "en": "Luzhu",
+        "ja": "路竹"
+      },
       "stationName": "路竹",
       "stationEName": "Luzhu",
       "stationAddrTw": "高雄市路竹區竹南里中正路 288 號",
@@ -1851,6 +2577,11 @@
     },
     {
       "stationCode": "4310",
+      "labels": {
+        "zh-TW": "岡山",
+        "en": "Gangshan",
+        "ja": "岡山"
+      },
       "stationName": "岡山",
       "stationEName": "Gangshan",
       "stationAddrTw": "高雄市岡山區碧紅里岡燕路 111 號",
@@ -1865,6 +2596,11 @@
     },
     {
       "stationCode": "4320",
+      "labels": {
+        "zh-TW": "橋頭",
+        "en": "Qiaotou",
+        "ja": "橋頭"
+      },
       "stationName": "橋頭",
       "stationEName": "Qiaotou",
       "stationAddrTw": "高雄市橋頭區橋頭里站前街 14 號",
@@ -1879,6 +2615,11 @@
     },
     {
       "stationCode": "4330",
+      "labels": {
+        "zh-TW": "楠梓",
+        "en": "Nanzi",
+        "ja": "楠梓"
+      },
       "stationName": "楠梓",
       "stationEName": "Nanzi",
       "stationAddrTw": "高雄市楠梓區惠楠里建楠路 229 號",
@@ -1893,6 +2634,11 @@
     },
     {
       "stationCode": "4340",
+      "labels": {
+        "zh-TW": "新左營",
+        "en": "Xinzuoying",
+        "ja": "新左営"
+      },
       "stationName": "新左營",
       "stationEName": "Xinzuoying",
       "stationAddrTw": "高雄市左營區尾北里站前北路 1 號",
@@ -1907,6 +2653,11 @@
     },
     {
       "stationCode": "4350",
+      "labels": {
+        "zh-TW": "左營",
+        "en": "Zuoying",
+        "ja": "左営"
+      },
       "stationName": "左營",
       "stationEName": "Zuoying",
       "stationAddrTw": "高雄市左營區翠華路1050號地下1層",
@@ -1921,6 +2672,11 @@
     },
     {
       "stationCode": "4360",
+      "labels": {
+        "zh-TW": "內惟",
+        "en": "Neiwei",
+        "ja": "內惟"
+      },
       "stationName": "內惟",
       "stationEName": "Neiwei",
       "stationAddrTw": "高雄市鼓山區翠華路500號地下1層",
@@ -1935,6 +2691,11 @@
     },
     {
       "stationCode": "4370",
+      "labels": {
+        "zh-TW": "美術館",
+        "en": "Museum of Fine Arts",
+        "ja": "高雄美術館"
+      },
       "stationName": "美術館",
       "stationEName": "Museum of Fine Arts",
       "stationAddrTw": "高雄市鼓山區翠華路246號",
@@ -1949,6 +2710,11 @@
     },
     {
       "stationCode": "4380",
+      "labels": {
+        "zh-TW": "鼓山",
+        "en": "Gushan",
+        "ja": "鼓山"
+      },
       "stationName": "鼓山",
       "stationEName": "Gushan",
       "stationAddrTw": "高雄市鼓山區鐵路街20巷6號",
@@ -1963,6 +2729,11 @@
     },
     {
       "stationCode": "4390",
+      "labels": {
+        "zh-TW": "三塊厝",
+        "en": "Sankuaicuo",
+        "ja": "三塊厝"
+      },
       "stationName": "三塊厝",
       "stationEName": "Sankuaicuo",
       "stationAddrTw": "高雄市三民區德北里6鄰康平街1號",
@@ -1977,6 +2748,11 @@
     },
     {
       "stationCode": "4400",
+      "labels": {
+        "zh-TW": "高雄",
+        "en": "Kaohsiung",
+        "ja": "高雄"
+      },
       "stationName": "高雄",
       "stationEName": "Kaohsiung",
       "stationAddrTw": "高雄市三民區港西里建國二路 318 號",
@@ -1991,6 +2767,11 @@
     },
     {
       "stationCode": "4410",
+      "labels": {
+        "zh-TW": "民族",
+        "en": "Minzu",
+        "ja": "民族"
+      },
       "stationName": "民族",
       "stationEName": "Minzu",
       "stationAddrTw": "高雄市三民區博惠里14鄰凱旋一路260號",
@@ -2005,6 +2786,11 @@
     },
     {
       "stationCode": "4420",
+      "labels": {
+        "zh-TW": "科工館",
+        "en": "Science And Technology Museum",
+        "ja": "国立科学技術博物館"
+      },
       "stationName": "科工館",
       "stationEName": "Science And Technology Museum",
       "stationAddrTw": "高雄市三民區寶盛里15鄰大順三路307號",
@@ -2019,6 +2805,11 @@
     },
     {
       "stationCode": "4430",
+      "labels": {
+        "zh-TW": "正義",
+        "en": "Zhengyi",
+        "ja": "正義"
+      },
       "stationName": "正義",
       "stationEName": "Zhengyi",
       "stationAddrTw": "高雄市苓雅區建軍里正義路 308 號 B1",
@@ -2033,6 +2824,11 @@
     },
     {
       "stationCode": "4440",
+      "labels": {
+        "zh-TW": "鳳山",
+        "en": "Fongshan",
+        "ja": "鳳山"
+      },
       "stationName": "鳳山",
       "stationEName": "Fongshan",
       "stationAddrTw": "高雄市鳳山區曹公里曹公路 137 號",
@@ -2047,6 +2843,11 @@
     },
     {
       "stationCode": "4450",
+      "labels": {
+        "zh-TW": "後庄",
+        "en": "Houzhuang",
+        "ja": "後庄"
+      },
       "stationName": "後庄",
       "stationEName": "Houzhuang",
       "stationAddrTw": "高雄市大寮區後庄里民慶街 9 號",
@@ -2061,6 +2862,11 @@
     },
     {
       "stationCode": "4460",
+      "labels": {
+        "zh-TW": "九曲堂",
+        "en": "Jiuqutang",
+        "ja": "九曲堂"
+      },
       "stationName": "九曲堂",
       "stationEName": "Jiuqutang",
       "stationAddrTw": "高雄市大樹區久堂里久堂路鐵路巷 15 號",
@@ -2075,6 +2881,11 @@
     },
     {
       "stationCode": "4470",
+      "labels": {
+        "zh-TW": "六塊厝",
+        "en": "Liukuaicuo",
+        "ja": "六塊厝"
+      },
       "stationName": "六塊厝",
       "stationEName": "Liukuaicuo",
       "stationAddrTw": "屏東縣屏東市長安里光復路 392 號",
@@ -2089,6 +2900,11 @@
     },
     {
       "stationCode": "5000",
+      "labels": {
+        "zh-TW": "屏東",
+        "en": "Pingtung",
+        "ja": "屏東"
+      },
       "stationName": "屏東",
       "stationEName": "Pingtung",
       "stationAddrTw": "屏東縣屏東市建國里公勇路 62 號",
@@ -2103,6 +2919,11 @@
     },
     {
       "stationCode": "5010",
+      "labels": {
+        "zh-TW": "歸來",
+        "en": "Guilai",
+        "ja": "帰来"
+      },
       "stationName": "歸來",
       "stationEName": "Guilai",
       "stationAddrTw": "屏東縣屏東市歸心里歸仁路 5 之 4 號",
@@ -2117,6 +2938,11 @@
     },
     {
       "stationCode": "5020",
+      "labels": {
+        "zh-TW": "麟洛",
+        "en": "Linluo",
+        "ja": "麟洛"
+      },
       "stationName": "麟洛",
       "stationEName": "Linluo",
       "stationAddrTw": "屏東縣麟洛鄉田道村中華路站前巷 15 號",
@@ -2131,6 +2957,11 @@
     },
     {
       "stationCode": "5030",
+      "labels": {
+        "zh-TW": "西勢",
+        "en": "Xishi",
+        "ja": "西勢"
+      },
       "stationName": "西勢",
       "stationEName": "Xishi",
       "stationAddrTw": "屏東縣竹田鄉西勢村西豐路 2 號",
@@ -2145,6 +2976,11 @@
     },
     {
       "stationCode": "5040",
+      "labels": {
+        "zh-TW": "竹田",
+        "en": "Zhutian",
+        "ja": "竹田"
+      },
       "stationName": "竹田",
       "stationEName": "Zhutian",
       "stationAddrTw": "屏東縣竹田鄉履豐村豐明路29 號",
@@ -2159,6 +2995,11 @@
     },
     {
       "stationCode": "5050",
+      "labels": {
+        "zh-TW": "潮州",
+        "en": "Chaozhou",
+        "ja": "潮州"
+      },
       "stationName": "潮州",
       "stationEName": "Chaozhou",
       "stationAddrTw": "屏東縣潮州鎮新榮里信義路 111 號",
@@ -2173,6 +3014,11 @@
     },
     {
       "stationCode": "5060",
+      "labels": {
+        "zh-TW": "崁頂",
+        "en": "Kanding",
+        "ja": "崁頂"
+      },
       "stationName": "崁頂",
       "stationEName": "Kanding",
       "stationAddrTw": "屏東縣崁頂鄉崁頂村田寮路",
@@ -2187,6 +3033,11 @@
     },
     {
       "stationCode": "5070",
+      "labels": {
+        "zh-TW": "南州",
+        "en": "Nanzhou",
+        "ja": "南州"
+      },
       "stationName": "南州",
       "stationEName": "Nanzhou",
       "stationAddrTw": "屏東縣南州鄉仁里村仁里路 86 號",
@@ -2201,6 +3052,11 @@
     },
     {
       "stationCode": "5080",
+      "labels": {
+        "zh-TW": "鎮安",
+        "en": "Zhen'an",
+        "ja": "鎮安"
+      },
       "stationName": "鎮安",
       "stationEName": "Zhen'an",
       "stationAddrTw": "屏東縣林邊鄉鎮安村永和路4號",
@@ -2215,6 +3071,11 @@
     },
     {
       "stationCode": "5090",
+      "labels": {
+        "zh-TW": "林邊",
+        "en": "Linbian",
+        "ja": "林辺"
+      },
       "stationName": "林邊",
       "stationEName": "Linbian",
       "stationAddrTw": "屏東縣林邊鄉仁和村仁愛路 33 號",
@@ -2229,6 +3090,11 @@
     },
     {
       "stationCode": "5100",
+      "labels": {
+        "zh-TW": "佳冬",
+        "en": "Jiadong",
+        "ja": "佳冬"
+      },
       "stationName": "佳冬",
       "stationEName": "Jiadong",
       "stationAddrTw": "屏東縣佳冬鄉六根村復興路21號",
@@ -2243,6 +3109,11 @@
     },
     {
       "stationCode": "5110",
+      "labels": {
+        "zh-TW": "東海",
+        "en": "Donghai",
+        "ja": "東海"
+      },
       "stationName": "東海",
       "stationEName": "Donghai",
       "stationAddrTw": "屏東縣枋寮鄉東海村西安路 92 號",
@@ -2257,6 +3128,11 @@
     },
     {
       "stationCode": "5120",
+      "labels": {
+        "zh-TW": "枋寮",
+        "en": "Fangliao",
+        "ja": "枋寮"
+      },
       "stationName": "枋寮",
       "stationEName": "Fangliao",
       "stationAddrTw": "屏東縣枋寮鄉枋寮村儲運路 18 號",
@@ -2271,6 +3147,11 @@
     },
     {
       "stationCode": "5130",
+      "labels": {
+        "zh-TW": "加祿",
+        "en": "Jialu",
+        "ja": "加禄"
+      },
       "stationName": "加祿",
       "stationEName": "Jialu",
       "stationAddrTw": "屏東縣枋山鄉加祿村會社 53 號",
@@ -2285,6 +3166,11 @@
     },
     {
       "stationCode": "5140",
+      "labels": {
+        "zh-TW": "內獅",
+        "en": "Neishi",
+        "ja": "内獅"
+      },
       "stationName": "內獅",
       "stationEName": "Neishi",
       "stationAddrTw": "屏東縣枋山鄉加祿村南和 43 號",
@@ -2299,6 +3185,11 @@
     },
     {
       "stationCode": "5160",
+      "labels": {
+        "zh-TW": "枋山",
+        "en": "Fangshan",
+        "ja": "枋山"
+      },
       "stationName": "枋山",
       "stationEName": "Fangshan",
       "stationAddrTw": "屏東縣獅子鄉內獅村內獅巷 84 號",
@@ -2313,6 +3204,11 @@
     },
     {
       "stationCode": "5170",
+      "labels": {
+        "zh-TW": "枋野",
+        "en": "Fangye",
+        "ja": "枋野"
+      },
       "stationName": "枋野",
       "stationEName": "Fangye",
       "stationAddrTw": "屏東縣獅子鄉內獅村內獅巷 88 號",
@@ -2327,6 +3223,11 @@
     },
     {
       "stationCode": "5190",
+      "labels": {
+        "zh-TW": "大武",
+        "en": "Dawu",
+        "ja": "大武"
+      },
       "stationName": "大武",
       "stationEName": "Dawu",
       "stationAddrTw": "臺東縣大武鄉大鳥村和平部落 33 號",
@@ -2341,6 +3242,11 @@
     },
     {
       "stationCode": "5200",
+      "labels": {
+        "zh-TW": "瀧溪",
+        "en": "Longxi",
+        "ja": "瀧渓"
+      },
       "stationName": "瀧溪",
       "stationEName": "Longxi",
       "stationAddrTw": "臺東縣太麻里鄉多良村大溪 37 號",
@@ -2355,6 +3261,11 @@
     },
     {
       "stationCode": "5210",
+      "labels": {
+        "zh-TW": "金崙",
+        "en": "Jinlun",
+        "ja": "金崙"
+      },
       "stationName": "金崙",
       "stationEName": "Jinlun",
       "stationAddrTw": "臺東縣太麻里鄉金崙村金崙 47 之 17 號",
@@ -2369,6 +3280,11 @@
     },
     {
       "stationCode": "5220",
+      "labels": {
+        "zh-TW": "太麻里",
+        "en": "Taimali",
+        "ja": "太麻里"
+      },
       "stationName": "太麻里",
       "stationEName": "Taimali",
       "stationAddrTw": "臺東縣太麻里鄉大王村站前路 2 號",
@@ -2383,6 +3299,11 @@
     },
     {
       "stationCode": "5230",
+      "labels": {
+        "zh-TW": "知本",
+        "en": "Zhiben",
+        "ja": "知本"
+      },
       "stationName": "知本",
       "stationEName": "Zhiben",
       "stationAddrTw": "臺東縣臺東市知本里知本路二段 900 巷 85 號",
@@ -2397,6 +3318,11 @@
     },
     {
       "stationCode": "5240",
+      "labels": {
+        "zh-TW": "康樂",
+        "en": "Kangle",
+        "ja": "康楽"
+      },
       "stationName": "康樂",
       "stationEName": "Kangle",
       "stationAddrTw": "臺東縣臺東市康樂里博物館路 51 巷 131 號",
@@ -2411,6 +3337,11 @@
     },
     {
       "stationCode": "5998",
+      "labels": {
+        "zh-TW": "南方小站",
+        "en": "South",
+        "ja": "みなみ駅"
+      },
       "stationName": "南方小站",
       "stationEName": "South",
       "stationAddrTw": "屏東縣潮州鎮光復路 461 號",
@@ -2425,6 +3356,11 @@
     },
     {
       "stationCode": "5999",
+      "labels": {
+        "zh-TW": "潮州基地",
+        "en": "Chaozhou Railway Workshop",
+        "ja": "潮州基地"
+      },
       "stationName": "潮州基地",
       "stationEName": "Chaozhou Railway Workshop",
       "stationAddrTw": "屏東縣潮州鎮光春里光復路 616 號",
@@ -2439,6 +3375,11 @@
     },
     {
       "stationCode": "6000",
+      "labels": {
+        "zh-TW": "臺東",
+        "en": "Taitung",
+        "ja": "台東"
+      },
       "stationName": "臺東",
       "stationEName": "Taitung",
       "stationAddrTw": "臺東縣臺東市岩灣里岩灣路 101 巷 598 號",
@@ -2453,6 +3394,11 @@
     },
     {
       "stationCode": "6010",
+      "labels": {
+        "zh-TW": "山里",
+        "en": "Shanli",
+        "ja": "山里"
+      },
       "stationName": "山里",
       "stationEName": "Shanli",
       "stationAddrTw": "臺東縣卑南鄉嘉豐村山里路 108 號",
@@ -2467,6 +3413,11 @@
     },
     {
       "stationCode": "6020",
+      "labels": {
+        "zh-TW": "鹿野",
+        "en": "Luye",
+        "ja": "鹿野"
+      },
       "stationName": "鹿野",
       "stationEName": "Luye",
       "stationAddrTw": "臺東縣鹿野鄉鹿野村中正路 38 號",
@@ -2481,6 +3432,11 @@
     },
     {
       "stationCode": "6030",
+      "labels": {
+        "zh-TW": "瑞源",
+        "en": "Ruiyuan",
+        "ja": "瑞源"
+      },
       "stationName": "瑞源",
       "stationEName": "Ruiyuan",
       "stationAddrTw": "臺東縣鹿野鄉瑞源村瑞景路一段 336 巷 8 號 之 1",
@@ -2495,6 +3451,11 @@
     },
     {
       "stationCode": "6040",
+      "labels": {
+        "zh-TW": "瑞和",
+        "en": "Ruihe",
+        "ja": "瑞和"
+      },
       "stationName": "瑞和",
       "stationEName": "Ruihe",
       "stationAddrTw": "臺東縣鹿野鄉瑞和村瑞景路三段 1 之 1 號",
@@ -2509,6 +3470,11 @@
     },
     {
       "stationCode": "6050",
+      "labels": {
+        "zh-TW": "關山",
+        "en": "Guanshan",
+        "ja": "関山"
+      },
       "stationName": "關山",
       "stationEName": "Guanshan",
       "stationAddrTw": "臺東縣關山鎮里壠里博愛路 2 號",
@@ -2523,6 +3489,11 @@
     },
     {
       "stationCode": "6060",
+      "labels": {
+        "zh-TW": "海端",
+        "en": "Haiduan",
+        "ja": "海端"
+      },
       "stationName": "海端",
       "stationEName": "Haiduan",
       "stationAddrTw": "臺東縣關山鎮德高里西莊 49 號",
@@ -2537,6 +3508,11 @@
     },
     {
       "stationCode": "6070",
+      "labels": {
+        "zh-TW": "池上",
+        "en": "Chishang",
+        "ja": "池上"
+      },
       "stationName": "池上",
       "stationEName": "Chishang",
       "stationAddrTw": "臺東縣池上鄉福文村鐵花路 30 號",
@@ -2551,6 +3527,11 @@
     },
     {
       "stationCode": "6080",
+      "labels": {
+        "zh-TW": "富里",
+        "en": "Fuli",
+        "ja": "富里"
+      },
       "stationName": "富里",
       "stationEName": "Fuli",
       "stationAddrTw": "花蓮縣富里鄉富里村車站街 56 號",
@@ -2565,6 +3546,11 @@
     },
     {
       "stationCode": "6090",
+      "labels": {
+        "zh-TW": "東竹",
+        "en": "Dongzhu",
+        "ja": "東竹"
+      },
       "stationName": "東竹",
       "stationEName": "Dongzhu",
       "stationAddrTw": "花蓮縣富里鄉新興村新興 23 號",
@@ -2579,6 +3565,11 @@
     },
     {
       "stationCode": "6100",
+      "labels": {
+        "zh-TW": "東里",
+        "en": "Dongli",
+        "ja": "東里"
+      },
       "stationName": "東里",
       "stationEName": "Dongli",
       "stationAddrTw": "花蓮縣富里鄉東里村大莊路 15 之 6 號",
@@ -2593,6 +3584,11 @@
     },
     {
       "stationCode": "6110",
+      "labels": {
+        "zh-TW": "玉里",
+        "en": "Yuli",
+        "ja": "玉里"
+      },
       "stationName": "玉里",
       "stationEName": "Yuli",
       "stationAddrTw": "花蓮縣玉里鎮中城里康樂街 39 號",
@@ -2607,6 +3603,11 @@
     },
     {
       "stationCode": "6120",
+      "labels": {
+        "zh-TW": "三民",
+        "en": "Sanmin",
+        "ja": "三民"
+      },
       "stationName": "三民",
       "stationEName": "Sanmin",
       "stationAddrTw": "花蓮縣玉里鎮三民里三民 10 號",
@@ -2621,6 +3622,11 @@
     },
     {
       "stationCode": "6130",
+      "labels": {
+        "zh-TW": "瑞穗",
+        "en": "Ruisui",
+        "ja": "瑞穂"
+      },
       "stationName": "瑞穗",
       "stationEName": "Ruisui",
       "stationAddrTw": "花蓮縣瑞穗鄉瑞穗村四維街 13 號",
@@ -2635,6 +3641,11 @@
     },
     {
       "stationCode": "6140",
+      "labels": {
+        "zh-TW": "富源",
+        "en": "Fuyuan",
+        "ja": "富源"
+      },
       "stationName": "富源",
       "stationEName": "Fuyuan",
       "stationAddrTw": "花蓮縣瑞穗鄉富源村富源路 2 號",
@@ -2649,6 +3660,11 @@
     },
     {
       "stationCode": "6150",
+      "labels": {
+        "zh-TW": "大富",
+        "en": "Dafu",
+        "ja": "大富"
+      },
       "stationName": "大富",
       "stationEName": "Dafu",
       "stationAddrTw": "花蓮縣光復鄉大富村明德路 1 號",
@@ -2663,6 +3679,11 @@
     },
     {
       "stationCode": "6160",
+      "labels": {
+        "zh-TW": "光復",
+        "en": "Guangfu",
+        "ja": "光復"
+      },
       "stationName": "光復",
       "stationEName": "Guangfu",
       "stationAddrTw": "花蓮縣光復鄉大安村中正路一段 2 之 1 號",
@@ -2677,6 +3698,11 @@
     },
     {
       "stationCode": "6170",
+      "labels": {
+        "zh-TW": "萬榮",
+        "en": "Wanrong",
+        "ja": "萬栄"
+      },
       "stationName": "萬榮",
       "stationEName": "Wanrong",
       "stationAddrTw": "花蓮縣鳳林鎮長橋里長德街 17 號",
@@ -2691,6 +3717,11 @@
     },
     {
       "stationCode": "6180",
+      "labels": {
+        "zh-TW": "鳳林",
+        "en": "Fenglin",
+        "ja": "鳳林"
+      },
       "stationName": "鳳林",
       "stationEName": "Fenglin",
       "stationAddrTw": "花蓮縣鳳林鎮鳳智里中山路 43 號",
@@ -2705,6 +3736,11 @@
     },
     {
       "stationCode": "6190",
+      "labels": {
+        "zh-TW": "南平",
+        "en": "Nanping",
+        "ja": "南平"
+      },
       "stationName": "南平",
       "stationEName": "Nanping",
       "stationAddrTw": "花蓮縣鳳林鎮南平里自強路 233 號",
@@ -2719,6 +3755,11 @@
     },
     {
       "stationCode": "6200",
+      "labels": {
+        "zh-TW": "林榮新光",
+        "en": "Linrong Shin Kong",
+        "ja": "林栄新光"
+      },
       "stationName": "林榮新光",
       "stationEName": "Linrong Shin Kong",
       "stationAddrTw": "花蓮縣鳳林鎮兆豐路800號",
@@ -2733,6 +3774,11 @@
     },
     {
       "stationCode": "6210",
+      "labels": {
+        "zh-TW": "豐田",
+        "en": "Fengtian",
+        "ja": "豊田"
+      },
       "stationName": "豐田",
       "stationEName": "Fengtian",
       "stationAddrTw": "花蓮縣壽豐鄉豐山村站前街 36 號",
@@ -2747,6 +3793,11 @@
     },
     {
       "stationCode": "6220",
+      "labels": {
+        "zh-TW": "壽豐",
+        "en": "Shoufeng",
+        "ja": "寿豊"
+      },
       "stationName": "壽豐",
       "stationEName": "Shoufeng",
       "stationAddrTw": "花蓮縣壽豐鄉壽豐村壽山路 1 號",
@@ -2761,6 +3812,11 @@
     },
     {
       "stationCode": "6230",
+      "labels": {
+        "zh-TW": "平和",
+        "en": "Pinghe",
+        "ja": "平和"
+      },
       "stationName": "平和",
       "stationEName": "Pinghe",
       "stationAddrTw": "花蓮縣壽豐鄉平和村平和路 1 號",
@@ -2775,6 +3831,11 @@
     },
     {
       "stationCode": "6240",
+      "labels": {
+        "zh-TW": "志學",
+        "en": "Zhixue",
+        "ja": "志学"
+      },
       "stationName": "志學",
       "stationEName": "Zhixue",
       "stationAddrTw": "花蓮縣壽豐鄉志學村中正路 1 號",
@@ -2789,6 +3850,11 @@
     },
     {
       "stationCode": "6250",
+      "labels": {
+        "zh-TW": "吉安",
+        "en": "Ji'an",
+        "ja": "吉安"
+      },
       "stationName": "吉安",
       "stationEName": "Ji'an",
       "stationAddrTw": "花蓮縣吉安鄉南昌村南昌路1號",
@@ -2803,6 +3869,11 @@
     },
     {
       "stationCode": "7000",
+      "labels": {
+        "zh-TW": "花蓮",
+        "en": "Hualien",
+        "ja": "花蓮"
+      },
       "stationName": "花蓮",
       "stationEName": "Hualien",
       "stationAddrTw": "花蓮縣花蓮市國聯里國聯一路 100 號",
@@ -2817,6 +3888,11 @@
     },
     {
       "stationCode": "7010",
+      "labels": {
+        "zh-TW": "北埔",
+        "en": "Beipu",
+        "ja": "北埔"
+      },
       "stationName": "北埔",
       "stationEName": "Beipu",
       "stationAddrTw": "花蓮縣新城鄉北埔村自強街 113 號",
@@ -2831,6 +3907,11 @@
     },
     {
       "stationCode": "7020",
+      "labels": {
+        "zh-TW": "景美",
+        "en": "Jingmei",
+        "ja": "景美"
+      },
       "stationName": "景美",
       "stationEName": "Jingmei",
       "stationAddrTw": "花蓮縣秀林鄉景美村加灣 178 之 1 號",
@@ -2845,6 +3926,11 @@
     },
     {
       "stationCode": "7030",
+      "labels": {
+        "zh-TW": "新城",
+        "en": "Xincheng",
+        "ja": "新城"
+      },
       "stationName": "新城",
       "stationEName": "Xincheng",
       "stationAddrTw": "花蓮縣新城鄉新城村新興一路 73 號",
@@ -2859,6 +3945,11 @@
     },
     {
       "stationCode": "7040",
+      "labels": {
+        "zh-TW": "崇德",
+        "en": "Chongde",
+        "ja": "崇徳"
+      },
       "stationName": "崇德",
       "stationEName": "Chongde",
       "stationAddrTw": "花蓮縣秀林鄉崇德村海濱路 96 號",
@@ -2873,6 +3964,11 @@
     },
     {
       "stationCode": "7050",
+      "labels": {
+        "zh-TW": "和仁",
+        "en": "Heren",
+        "ja": "和仁"
+      },
       "stationName": "和仁",
       "stationEName": "Heren",
       "stationAddrTw": "花蓮縣秀林鄉和平村和仁 71 號",
@@ -2887,6 +3983,11 @@
     },
     {
       "stationCode": "7060",
+      "labels": {
+        "zh-TW": "和平",
+        "en": "Heping",
+        "ja": "和平"
+      },
       "stationName": "和平",
       "stationEName": "Heping",
       "stationAddrTw": "花蓮縣秀林鄉和平村和平 276 號",
@@ -2901,6 +4002,11 @@
     },
     {
       "stationCode": "7070",
+      "labels": {
+        "zh-TW": "漢本",
+        "en": "Hanben",
+        "ja": "漢本"
+      },
       "stationName": "漢本",
       "stationEName": "Hanben",
       "stationAddrTw": "宜蘭縣南澳鄉澳花村蘇花路一段 56 號",
@@ -2915,6 +4021,11 @@
     },
     {
       "stationCode": "7080",
+      "labels": {
+        "zh-TW": "武塔",
+        "en": "Wuta",
+        "ja": "武塔"
+      },
       "stationName": "武塔",
       "stationEName": "Wuta",
       "stationAddrTw": "宜蘭縣南澳鄉武塔村新溪路 18 號",
@@ -2929,6 +4040,11 @@
     },
     {
       "stationCode": "7090",
+      "labels": {
+        "zh-TW": "南澳",
+        "en": "Nan'ao",
+        "ja": "南澳"
+      },
       "stationName": "南澳",
       "stationEName": "Nan'ao",
       "stationAddrTw": "宜蘭縣蘇澳鎮南強里大通路 22 號",
@@ -2943,6 +4059,11 @@
     },
     {
       "stationCode": "7100",
+      "labels": {
+        "zh-TW": "東澳",
+        "en": "Dong'ao",
+        "ja": "東澳"
+      },
       "stationName": "東澳",
       "stationEName": "Dong'ao",
       "stationAddrTw": "宜蘭縣南澳鄉東岳村東岳路 1 號",
@@ -2957,6 +4078,11 @@
     },
     {
       "stationCode": "7110",
+      "labels": {
+        "zh-TW": "永樂",
+        "en": "Yongle",
+        "ja": "永楽"
+      },
       "stationName": "永樂",
       "stationEName": "Yongle",
       "stationAddrTw": "宜蘭縣蘇澳鎮永樂里圳頭路 60 號",
@@ -2971,6 +4097,11 @@
     },
     {
       "stationCode": "7120",
+      "labels": {
+        "zh-TW": "蘇澳",
+        "en": "Su'ao",
+        "ja": "蘇澳"
+      },
       "stationName": "蘇澳",
       "stationEName": "Su'ao",
       "stationAddrTw": "宜蘭縣蘇澳鎮蘇南里太平路 1 號",
@@ -2985,6 +4116,11 @@
     },
     {
       "stationCode": "7130",
+      "labels": {
+        "zh-TW": "蘇澳新",
+        "en": "Su'aoxin",
+        "ja": "蘇澳新"
+      },
       "stationName": "蘇澳新",
       "stationEName": "Su'aoxin",
       "stationAddrTw": "宜蘭縣蘇澳鎮聖愛里中山路二段 238 號",
@@ -2999,6 +4135,11 @@
     },
     {
       "stationCode": "7140",
+      "labels": {
+        "zh-TW": "新馬",
+        "en": "Xinma",
+        "ja": "新馬"
+      },
       "stationName": "新馬",
       "stationEName": "Xinma",
       "stationAddrTw": "宜蘭縣蘇澳鎮新城里中山路二段 322 號",
@@ -3013,6 +4154,11 @@
     },
     {
       "stationCode": "7150",
+      "labels": {
+        "zh-TW": "冬山",
+        "en": "Dongshan",
+        "ja": "冬山"
+      },
       "stationName": "冬山",
       "stationEName": "Dongshan",
       "stationAddrTw": "宜蘭縣冬山鄉冬山村中正路 1 -1號",
@@ -3027,6 +4173,11 @@
     },
     {
       "stationCode": "7160",
+      "labels": {
+        "zh-TW": "羅東",
+        "en": "Luodong",
+        "ja": "羅東"
+      },
       "stationName": "羅東",
       "stationEName": "Luodong",
       "stationAddrTw": "宜蘭縣羅東鎮大新里公正路 2 號",
@@ -3041,6 +4192,11 @@
     },
     {
       "stationCode": "7170",
+      "labels": {
+        "zh-TW": "中里",
+        "en": "Zhongli_Yilan",
+        "ja": "中里"
+      },
       "stationName": "中里",
       "stationEName": "Zhongli_Yilan",
       "stationAddrTw": "宜蘭縣五結鄉中里路",
@@ -3055,6 +4211,11 @@
     },
     {
       "stationCode": "7180",
+      "labels": {
+        "zh-TW": "二結",
+        "en": "Erjie",
+        "ja": "二結"
+      },
       "stationName": "二結",
       "stationEName": "Erjie",
       "stationAddrTw": "宜蘭縣五結鄉五結中路三段658巷8號",
@@ -3069,6 +4230,11 @@
     },
     {
       "stationCode": "7190",
+      "labels": {
+        "zh-TW": "宜蘭",
+        "en": "Yilan",
+        "ja": "宜蘭"
+      },
       "stationName": "宜蘭",
       "stationEName": "Yilan",
       "stationAddrTw": "宜蘭縣宜蘭市和睦里光復路 1 號",
@@ -3083,6 +4249,11 @@
     },
     {
       "stationCode": "7200",
+      "labels": {
+        "zh-TW": "四城",
+        "en": "Sicheng",
+        "ja": "四城"
+      },
       "stationName": "四城",
       "stationEName": "Sicheng",
       "stationAddrTw": "宜蘭縣礁溪鄉吳沙村站前路 24 號",
@@ -3097,6 +4268,11 @@
     },
     {
       "stationCode": "7210",
+      "labels": {
+        "zh-TW": "礁溪",
+        "en": "Jiaoxi",
+        "ja": "礁渓"
+      },
       "stationName": "礁溪",
       "stationEName": "Jiaoxi",
       "stationAddrTw": "宜蘭縣礁溪鄉德陽村溫泉路 1 號",
@@ -3111,6 +4287,11 @@
     },
     {
       "stationCode": "7220",
+      "labels": {
+        "zh-TW": "頂埔",
+        "en": "Dingpu",
+        "ja": "頂埔"
+      },
       "stationName": "頂埔",
       "stationEName": "Dingpu",
       "stationAddrTw": "宜蘭縣頭城鎮下埔里下埔路 4 之 8 號",
@@ -3125,6 +4306,11 @@
     },
     {
       "stationCode": "7230",
+      "labels": {
+        "zh-TW": "頭城",
+        "en": "Toucheng",
+        "ja": "頭城"
+      },
       "stationName": "頭城",
       "stationEName": "Toucheng",
       "stationAddrTw": "宜蘭縣頭城鎮纘祥路 59 號",
@@ -3139,6 +4325,11 @@
     },
     {
       "stationCode": "7240",
+      "labels": {
+        "zh-TW": "外澳",
+        "en": "Wai'ao",
+        "ja": "外澳"
+      },
       "stationName": "外澳",
       "stationEName": "Wai'ao",
       "stationAddrTw": "宜蘭縣頭城鎮濱海路二段 217 號",
@@ -3153,6 +4344,11 @@
     },
     {
       "stationCode": "7250",
+      "labels": {
+        "zh-TW": "龜山",
+        "en": "Guishan",
+        "ja": "亀山"
+      },
       "stationName": "龜山",
       "stationEName": "Guishan",
       "stationAddrTw": "宜蘭縣頭城鎮更新里濱海路三段 261 號",
@@ -3167,6 +4363,11 @@
     },
     {
       "stationCode": "7260",
+      "labels": {
+        "zh-TW": "大溪",
+        "en": "Daxi",
+        "ja": "大渓"
+      },
       "stationName": "大溪",
       "stationEName": "Daxi",
       "stationAddrTw": "宜蘭縣頭城鎮濱海路五段 63 號",
@@ -3181,6 +4382,11 @@
     },
     {
       "stationCode": "7270",
+      "labels": {
+        "zh-TW": "大里",
+        "en": "Dali",
+        "ja": "大里"
+      },
       "stationName": "大里",
       "stationEName": "Dali",
       "stationAddrTw": "宜蘭縣頭城鎮大里里濱海路六段 326 號",
@@ -3195,6 +4401,11 @@
     },
     {
       "stationCode": "7280",
+      "labels": {
+        "zh-TW": "石城",
+        "en": "Shicheng",
+        "ja": "石城"
+      },
       "stationName": "石城",
       "stationEName": "Shicheng",
       "stationAddrTw": "宜蘭縣頭城鎮濱海路七段 230 號",
@@ -3209,6 +4420,11 @@
     },
     {
       "stationCode": "7290",
+      "labels": {
+        "zh-TW": "福隆",
+        "en": "Fulong",
+        "ja": "福隆"
+      },
       "stationName": "福隆",
       "stationEName": "Fulong",
       "stationAddrTw": "新北市貢寮區福隆里福隆街 2 號",
@@ -3223,6 +4439,11 @@
     },
     {
       "stationCode": "7300",
+      "labels": {
+        "zh-TW": "貢寮",
+        "en": "Gongliao",
+        "ja": "貢寮"
+      },
       "stationName": "貢寮",
       "stationEName": "Gongliao",
       "stationAddrTw": "新北市貢寮區貢寮里朝陽街 33 號",
@@ -3237,6 +4458,11 @@
     },
     {
       "stationCode": "7310",
+      "labels": {
+        "zh-TW": "雙溪",
+        "en": "Shuangxi",
+        "ja": "双渓"
+      },
       "stationName": "雙溪",
       "stationEName": "Shuangxi",
       "stationAddrTw": "新北市雙溪區新基里朝陽街 1 號",
@@ -3251,6 +4477,11 @@
     },
     {
       "stationCode": "7320",
+      "labels": {
+        "zh-TW": "牡丹",
+        "en": "Mudan",
+        "ja": "牡丹"
+      },
       "stationName": "牡丹",
       "stationEName": "Mudan",
       "stationAddrTw": "新北市雙溪區牡丹里51號",
@@ -3265,6 +4496,11 @@
     },
     {
       "stationCode": "7330",
+      "labels": {
+        "zh-TW": "三貂嶺",
+        "en": "Sandiaoling",
+        "ja": "三貂嶺"
+      },
       "stationName": "三貂嶺",
       "stationEName": "Sandiaoling",
       "stationAddrTw": "新北市瑞芳區碩仁里魚寮路 1 號",
@@ -3279,6 +4515,11 @@
     },
     {
       "stationCode": "7331",
+      "labels": {
+        "zh-TW": "大華",
+        "en": "Dahua",
+        "ja": "大華"
+      },
       "stationName": "大華",
       "stationEName": "Dahua",
       "stationAddrTw": "新北市平溪區南山里六分 12 之 1 號",
@@ -3293,6 +4534,11 @@
     },
     {
       "stationCode": "7332",
+      "labels": {
+        "zh-TW": "十分",
+        "en": "Shifen",
+        "ja": "十分"
+      },
       "stationName": "十分",
       "stationEName": "Shifen",
       "stationAddrTw": "新北市平溪區十分里十分街 51 號",
@@ -3307,6 +4553,11 @@
     },
     {
       "stationCode": "7333",
+      "labels": {
+        "zh-TW": "望古",
+        "en": "Wanggu",
+        "ja": "望古"
+      },
       "stationName": "望古",
       "stationEName": "Wanggu",
       "stationAddrTw": "新北市平溪區望古里 (無站房)",
@@ -3321,6 +4572,11 @@
     },
     {
       "stationCode": "7334",
+      "labels": {
+        "zh-TW": "嶺腳",
+        "en": "Lingjiao",
+        "ja": "嶺脚"
+      },
       "stationName": "嶺腳",
       "stationEName": "Lingjiao",
       "stationAddrTw": "新北市平溪區嶺腳里嶺腳寮 22 號",
@@ -3335,6 +4591,11 @@
     },
     {
       "stationCode": "7335",
+      "labels": {
+        "zh-TW": "平溪",
+        "en": "Pingxi",
+        "ja": "平渓"
+      },
       "stationName": "平溪",
       "stationEName": "Pingxi",
       "stationAddrTw": "新北市平溪區平溪里中華街 12 號",
@@ -3349,6 +4610,11 @@
     },
     {
       "stationCode": "7336",
+      "labels": {
+        "zh-TW": "菁桐",
+        "en": "Jingtong",
+        "ja": "菁桐"
+      },
       "stationName": "菁桐",
       "stationEName": "Jingtong",
       "stationAddrTw": "新北市平溪區菁桐里菁桐街 52 號",
@@ -3363,6 +4629,11 @@
     },
     {
       "stationCode": "7350",
+      "labels": {
+        "zh-TW": "猴硐",
+        "en": "Houtong",
+        "ja": "侯硐"
+      },
       "stationName": "猴硐",
       "stationEName": "Houtong",
       "stationAddrTw": "新北市瑞芳區光復里柴寮路 70 號",
@@ -3377,6 +4648,11 @@
     },
     {
       "stationCode": "7360",
+      "labels": {
+        "zh-TW": "瑞芳",
+        "en": "Ruifang",
+        "ja": "瑞芳"
+      },
       "stationName": "瑞芳",
       "stationEName": "Ruifang",
       "stationAddrTw": "新北市瑞芳區龍潭里明燈路三段 82 號",
@@ -3391,6 +4667,11 @@
     },
     {
       "stationCode": "7361",
+      "labels": {
+        "zh-TW": "海科館",
+        "en": "Haikeguan",
+        "ja": "海科館"
+      },
       "stationName": "海科館",
       "stationEName": "Haikeguan",
       "stationAddrTw": "基隆市中正區長潭里",
@@ -3405,6 +4686,11 @@
     },
     {
       "stationCode": "7362",
+      "labels": {
+        "zh-TW": "八斗子",
+        "en": "Badouzi",
+        "ja": "八斗子"
+      },
       "stationName": "八斗子",
       "stationEName": "Badouzi",
       "stationAddrTw": "新北市瑞芳區建基路2段121號隔壁 砂子里省道臺 2 線 (與新北市瑞芳區交界處、無站房)",
@@ -3419,6 +4705,11 @@
     },
     {
       "stationCode": "7380",
+      "labels": {
+        "zh-TW": "四腳亭",
+        "en": "Sijiaoting",
+        "ja": "四脚亭"
+      },
       "stationName": "四腳亭",
       "stationEName": "Sijiaoting",
       "stationAddrTw": "新北市瑞芳區吉慶里中央路 65 號",
@@ -3433,6 +4724,11 @@
     },
     {
       "stationCode": "7390",
+      "labels": {
+        "zh-TW": "暖暖",
+        "en": "Nuannuan",
+        "ja": "暖暖"
+      },
       "stationName": "暖暖",
       "stationEName": "Nuannuan",
       "stationAddrTw": "基隆市暖暖區暖暖里暖暖街 51 號",

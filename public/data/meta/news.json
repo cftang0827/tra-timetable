@@ -1,6 +1,20 @@
 {
   "items": [
     {
+      "id": "2026-08-03-2",
+      "date": "2026-08-03",
+      "title": {
+        "zh-TW": "給親愛的使用者",
+        "en": "Dear users",
+        "ja": "ご利用の皆さまへ"
+      },
+      "body": {
+        "zh-TW": "感謝你們使用本 APP，我們盡力希望給您最好的使用體驗，但如果可能有不方便使用或是資料錯誤的地方我們深表歉意，也希望您不吝指教，歡迎寄信至 cftang0827@gmail.com，使用您方便的語言即可。\n\n請注意本 APP 只有班次資料，並沒有串接即時動態 API，因為該 API 是需要付費申請的，因此班次資料也僅供參考，本網站不對資料正確性以及到點時間負責，感謝您的理解與配合！",
+        "en": "Thank you for using this app. We do our best to provide a good experience, but we apologize if anything is hard to use or if any data is incorrect. We welcome your feedback. Please email cftang0827@gmail.com in whichever language is most convenient for you.\n\nPlease note that this app only provides scheduled train data and is not connected to the real-time train status API, because that API requires a paid application. The timetable data is for reference only. This website is not responsible for data accuracy or train arrival times. Thank you for your understanding.",
+        "ja": "本アプリをご利用いただきありがとうございます。できる限り使いやすい体験を提供できるよう努めていますが、使いにくい点やデータの誤りがある場合は申し訳ありません。お気づきの点がありましたら、cftang0827@gmail.com まで、ご都合のよい言語でお気軽にご連絡ください。\n\n本アプリは列車の時刻表データのみを提供しており、リアルタイム運行情報 API には接続していません。この API は有料申請が必要なためです。そのため、掲載している班次資料は参考情報としてご利用ください。本サイトはデータの正確性および到着時刻について責任を負いません。ご理解とご協力をお願いいたします。"
+      }
+    },
+    {
       "id": "2026-08-03-1",
       "date": "2026-08-03",
       "title": "更新：站點分區、最近車站與班次分享",

@@ -3,10 +3,14 @@ const BASE = import.meta.env.BASE_URL.replace(/\/$/, "");
 const CANONICAL_HOST = "tra-timetable.cftang.dev";
 const GITHUB_PAGES_PATH = "/tra-timetable";
 import { ref, onMounted, computed, watch } from "vue";
+import { useI18n } from "vue-i18n";
+import { LS_LOCALE, SUPPORTED_LOCALES } from "./i18n";
+
+const { locale, t } = useI18n();
 
 /* ---------- state ---------- */
 const carsMap = ref({}); // id -> { name, alias }
-const stationRegionsMeta = ref({ allowedRegions: [], stations: [] });
+const stationRegionsMeta = ref({ locales: [], allowedRegions: [], regionLabels: {}, stations: [] });
 
 const trains = ref(null); // trainNo -> { carClass, stops: [[station, order, depMin, arrMin], ...], stopMap? }
 const stopIndex = ref(null); // station -> [trainNo...]
@@ -46,6 +50,12 @@ const LS_TIME = "tra.time";
 const LS_THEME = "tra.theme";
 
 const isDarkTheme = computed(() => theme.value === "dark");
+const activeLocale = computed(() => locale.value);
+const localeOptions = [
+  { value: "zh-TW", label: "🇹🇼 中文" },
+  { value: "en", label: "🇺🇸 EN" },
+  { value: "ja", label: "🇯🇵 日本語" },
+];
 
 function applyTheme(nextTheme) {
   theme.value = nextTheme === "dark" ? "dark" : "light";
@@ -55,7 +65,7 @@ function applyTheme(nextTheme) {
 
 function toggleTheme() {
   applyTheme(isDarkTheme.value ? "light" : "dark");
-  showToast(isDarkTheme.value ? "已切換深色模式" : "已切換淺色模式");
+  showToast(isDarkTheme.value ? t("darkMode") : t("lightMode"));
 }
 
 /* ---------- time/date helpers ---------- */
@@ -86,8 +96,28 @@ const maxDate = computed(() => {
   d.setDate(d.getDate() + 2);
   return yyyymmddLocal(d);
 });
+const intlLocale = computed(() => {
+  if (activeLocale.value === "en") return "en-US";
+  if (activeLocale.value === "ja") return "ja-JP";
+  return "zh-TW";
+});
+const todayDateLabel = computed(() => formatDateWithWeekday(minDate.value));
+const selectedDateLabel = computed(() => formatDateWithWeekday(date.value));
 
 /* ---------- utils ---------- */
+function formatDateWithWeekday(yyyyMmDd) {
+  if (!yyyyMmDd) return "";
+  const [year, month, day] = yyyyMmDd.split("-").map(Number);
+  if (!year || !month || !day) return yyyyMmDd;
+
+  return new Intl.DateTimeFormat(intlLocale.value, {
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+    weekday: "short",
+  }).format(new Date(year, month - 1, day));
+}
+
 function hhmmToMin(t) {
   const [h, m] = t.split(":").map(Number);
   return h * 60 + m;
@@ -113,7 +143,19 @@ function buildStopMap(stops) {
 }
 
 function stationName(code) {
-  return stationByCode.value.get(code)?.stationName ?? code;
+  const station = stationByCode.value.get(code);
+  if (!station) return code;
+  return labelFor(station.labels, station.stationName ?? code);
+}
+
+function labelFor(labels, fallback = "") {
+  return labels?.[activeLocale.value] ?? labels?.["zh-TW"] ?? labels?.en ?? fallback;
+}
+
+function localizedText(value, fallback = "") {
+  if (value == null) return fallback;
+  if (typeof value === "string") return value;
+  return value?.[activeLocale.value] ?? value?.["zh-TW"] ?? value?.en ?? fallback;
 }
 
 function redirectGitHubPagesToCustomDomain() {
@@ -133,12 +175,12 @@ const stationByCode = computed(() => {
 const stationGroups = computed(() => {
   return stationRegionsMeta.value.allowedRegions.map((region) => ({
     id: region,
-    label: region,
+    label: labelFor(stationRegionsMeta.value.regionLabels?.[region]?.labels, region),
     stations: stationRegionsMeta.value.stations
       .filter((station) => station.region === region)
       .map((station) => ({
         code: station.stationCode,
-        name: station.stationName,
+        name: labelFor(station.labels, station.stationName),
       })),
   }));
 });
@@ -206,9 +248,16 @@ function setNowTime() {
 }
 
 /* ✅ car type helpers */
-function isLocalTrain(carName) {
+function isLocalTrain(carClass) {
   // 區間 / 區間快
-  return String(carName ?? "").includes("區間");
+  const car = carsMap.value?.[carClass];
+  return String(car?.name ?? car?.alias ?? carClass).includes("區間");
+}
+
+function carDisplayName(carClass) {
+  const car = carsMap.value?.[carClass];
+  if (!car) return carClass;
+  return labelFor(car.labels, car.name ?? car.alias ?? carClass);
 }
 
 function getTrainEndpoints(trainObj) {
@@ -266,7 +315,9 @@ async function loadStationRegions() {
 
   const data = await res.json();
   stationRegionsMeta.value = {
+    locales: Array.isArray(data?.locales) ? data.locales : [],
     allowedRegions: Array.isArray(data?.allowedRegions) ? data.allowedRegions : [],
+    regionLabels: data?.regionLabels ?? {},
     stations: Array.isArray(data?.stations) ? data.stations : [],
   };
 }
@@ -282,7 +333,7 @@ async function loadDay(yyyy_mm_dd) {
 
   // ✅ Friendly message if date data not found
   if (tRes.status === 404 || sRes.status === 404) {
-    const err = new Error("此日期尚未提供時刻表資料");
+    const err = new Error(t("noDataForDate"));
     err.code = "NO_DATA";
     throw err;
   }
@@ -329,8 +380,7 @@ function query() {
     if (a.order >= b.order) continue;
     if (a.dep < earliestMin) continue;
 
-    const car = carsMap.value?.[t.carClass];
-    const carName = car?.name ?? car?.alias ?? t.carClass;
+    const carName = carDisplayName(t.carClass);
 
     const { start, end } = getTrainEndpoints(t);
 
@@ -341,7 +391,7 @@ function query() {
       arr: minToHHMM(b.arr),
       start,
       end,
-      isLocal: isLocalTrain(carName),
+      isLocal: isLocalTrain(t.carClass),
     });
   }
 
@@ -354,8 +404,7 @@ function getTrainDetail(trainNo) {
   const t = trains.value[trainNo];
   if (!t) return null;
 
-  const car = carsMap.value?.[t.carClass];
-  const carName = car?.name ?? car?.alias ?? t.carClass;
+  const carName = carDisplayName(t.carClass);
 
   const stops = Array.isArray(t.stops) ? t.stops : [];
   const rows = stops
@@ -419,15 +468,15 @@ async function shareTrain(trainNo) {
   const detail = getTrainDetail(trainNo);
   const endpoints = detail?.rows?.length
     ? `${detail.rows[0].name} → ${detail.rows[detail.rows.length - 1].name}`
-    : "完整停靠站";
-  const title = `台鐵 ${trainNo} 班次`;
-  const text = `${date.value} ${trainNo} ${endpoints}`;
+    : t("trainShareFallback");
+  const title = t("trainShareTitle", { trainNo });
+  const text = `${selectedDateLabel.value || date.value} ${trainNo} ${endpoints}`;
   const url = trainShareUrl(trainNo);
 
   if (navigator.share) {
     try {
       await navigator.share({ title, text, url });
-      showToast("已開啟分享");
+      showToast(t("shared"));
       return;
     } catch (e) {
       if (e?.name === "AbortError") return;
@@ -435,7 +484,7 @@ async function shareTrain(trainNo) {
   }
 
   if (await copyText(url)) {
-    showToast("已複製班次連結");
+    showToast(t("copied"));
   } else {
     showToast(url);
   }
@@ -492,7 +541,7 @@ async function openDirectTrainPage(trainNo) {
 
   try {
     await loadDay(date.value);
-    if (!trains.value?.[trainNo]) throw new Error("找不到此日期的班次資料");
+    if (!trains.value?.[trainNo]) throw new Error(t("trainNotFound"));
 
     directTrainNo.value = trainNo;
     selectedTrainNo.value = trainNo;
@@ -520,7 +569,7 @@ async function useNearestStation() {
   errorMsg.value = "";
 
   if (!navigator.geolocation) {
-    showToast("此瀏覽器不支援定位");
+    showToast(t("geoUnsupported"));
     return;
   }
 
@@ -541,7 +590,7 @@ async function useNearestStation() {
     });
 
     if (!nearest) {
-      showToast("目前沒有可用的車站 GPS 資料");
+      showToast(t("noGps"));
       return;
     }
 
@@ -549,11 +598,11 @@ async function useNearestStation() {
     fromRegion.value = nearest.station.region;
     selectedTrainNo.value = "";
     results.value = [];
-    showToast(`已設定最近車站：${nearest.station.stationName}，約 ${nearest.km.toFixed(1)} km`);
+    showToast(t("nearestSet", { name: stationName(nearest.station.stationCode), km: nearest.km.toFixed(1) }));
   } catch (e) {
-    if (e?.code === 1) showToast("定位權限未開啟");
-    else if (e?.code === 2) showToast("目前無法取得位置");
-    else if (e?.code === 3) showToast("定位逾時，請再試一次");
+    if (e?.code === 1) showToast(t("geoDenied"));
+    else if (e?.code === 2) showToast(t("geoUnavailable"));
+    else if (e?.code === 3) showToast(t("geoTimeout"));
     else showToast(e?.message ?? String(e));
   } finally {
     locating.value = false;
@@ -584,6 +633,15 @@ function loadPreferencesFromLocalStorage() {
 watch(theme, (v) => {
   try {
     localStorage.setItem(LS_THEME, v);
+  } catch {}
+});
+
+watch(locale, (v) => {
+  if (!SUPPORTED_LOCALES.includes(v)) return;
+  document.documentElement.lang = v;
+  document.title = t("appTitle");
+  try {
+    localStorage.setItem(LS_LOCALE, v);
   } catch {}
 });
 
@@ -636,6 +694,8 @@ watch(toRegion, (v) => {
 /* ---------- init ---------- */
 onMounted(async () => {
   if (redirectGitHubPagesToCustomDomain()) return;
+  document.documentElement.lang = locale.value;
+  document.title = t("appTitle");
   date.value = minDate.value;
   time.value = hhmmNowTaipei();
   applyTheme(localStorage.getItem(LS_THEME) ?? theme.value);
@@ -663,15 +723,26 @@ onMounted(async () => {
     <!-- Header -->
     <header class="sticky top-0 z-10 bg-white shadow-sm">
       <div class="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between">
-        <h1 class="text-lg font-semibold">台鐵班次查詢</h1>
+        <h1 class="text-lg font-semibold">{{ t("appTitle") }}</h1>
 
         <div class="flex items-center gap-2">
+          <select
+            v-model="locale"
+            class="h-9 w-24 rounded-lg border bg-white px-2 text-sm text-gray-700 shadow-sm"
+            :title="t('switchLanguage')"
+            :aria-label="t('switchLanguage')"
+          >
+            <option v-for="option in localeOptions" :key="option.value" :value="option.value">
+              {{ option.label }}
+            </option>
+          </select>
+
           <button
             type="button"
             @click="toggleTheme"
             class="h-9 w-9 rounded-lg border bg-white text-gray-700 shadow-sm active:scale-95 flex items-center justify-center"
-            :title="isDarkTheme ? '切換淺色模式' : '切換深色模式'"
-            :aria-label="isDarkTheme ? '切換淺色模式' : '切換深色模式'"
+            :title="isDarkTheme ? t('switchToLight') : t('switchToDark')"
+            :aria-label="isDarkTheme ? t('switchToLight') : t('switchToDark')"
           >
             <svg
               v-if="isDarkTheme"
@@ -710,10 +781,26 @@ onMounted(async () => {
           <button
             type="button"
             @click="openNews"
-            class="text-sm px-3 py-1.5 rounded-lg border bg-white text-gray-700 shadow-sm active:scale-95"
-            title="查看最新消息"
+            class="h-9 w-[6.75rem] rounded-lg border bg-white px-3 text-gray-700 shadow-sm active:scale-95 flex items-center justify-center gap-1.5"
+            :title="t('latestNews')"
+            :aria-label="t('latestNews')"
           >
-            最新消息
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-5 w-5"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              stroke-width="2"
+              aria-hidden="true"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M7 8h10M7 12h6m-8 8h14a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2Z"
+              />
+            </svg>
+            <span class="w-14 text-center text-sm font-medium truncate">{{ t("latestNews") }}</span>
           </button>
         </div>
       </div>
@@ -727,17 +814,17 @@ onMounted(async () => {
         class="absolute right-0 top-0 h-full w-[92%] max-w-md bg-white shadow-xl flex flex-col"
         role="dialog"
         aria-modal="true"
-        aria-label="最新消息"
+        :aria-label="t('latestNews')"
       >
         <div class="px-4 py-3 border-b flex items-center justify-between">
-          <div class="font-semibold">最新消息</div>
+          <div class="font-semibold">{{ t("latestNews") }}</div>
           <button type="button" class="text-sm text-gray-500 underline" @click="closeNews">
-            關閉
+            {{ t("close") }}
           </button>
         </div>
 
         <div class="p-4 overflow-y-auto">
-          <div v-if="newsLoading" class="text-sm text-gray-500">載入中…</div>
+          <div v-if="newsLoading" class="text-sm text-gray-500">{{ t("loading") }}</div>
 
           <div
             v-else-if="newsError"
@@ -747,9 +834,9 @@ onMounted(async () => {
           </div>
 
           <div v-else-if="newsItems.length === 0" class="text-sm text-gray-500">
-            目前沒有公告。
+            {{ t("noNews") }}
             <div class="mt-2 text-xs text-gray-400">
-              你可以新增檔案：<span class="font-mono">public/data/meta/news.json</span>
+              {{ t("newsHint") }}<span class="font-mono">public/data/meta/news.json</span>
             </div>
           </div>
 
@@ -761,7 +848,9 @@ onMounted(async () => {
             >
               <div class="flex items-start justify-between gap-3">
                 <div class="min-w-0">
-                  <div class="font-medium text-gray-800 truncate">{{ n.title ?? "公告" }}</div>
+                  <div class="font-medium text-gray-800 truncate">
+                    {{ localizedText(n.title, t("defaultAnnouncementTitle")) }}
+                  </div>
                   <div class="text-xs text-gray-500 mt-0.5">{{ n.date ?? "" }}</div>
                 </div>
 
@@ -772,18 +861,18 @@ onMounted(async () => {
                   rel="noreferrer"
                   class="text-xs text-blue-600 underline shrink-0"
                 >
-                  連結
+                  {{ t("link") }}
                 </a>
               </div>
 
-              <div v-if="n.body" class="mt-2 text-sm text-gray-700 whitespace-pre-line">
-                {{ n.body }}
+              <div v-if="localizedText(n.body)" class="mt-2 text-sm text-gray-700 whitespace-pre-line">
+                {{ localizedText(n.body) }}
               </div>
             </li>
           </ul>
 
           <button type="button" class="mt-4 text-xs text-gray-500 underline" @click="loadNews">
-            重新整理
+            {{ t("refresh") }}
           </button>
         </div>
       </aside>
@@ -791,18 +880,18 @@ onMounted(async () => {
 
     <!-- Search Card -->
     <section class="max-w-5xl mx-auto px-4 mt-4">
-      <div class="bg-white rounded-xl shadow p-4 grid grid-cols-2 gap-3 md:grid-cols-4">
+      <div class="bg-white rounded-xl shadow p-4 grid grid-cols-2 gap-3 md:grid-cols-[minmax(7.5rem,0.75fr)_minmax(0,2.7fr)_minmax(7.5rem,0.75fr)]">
         <!-- Date -->
         <div class="col-span-2 md:col-span-1">
           <div class="flex items-center justify-between">
-            <label class="text-sm text-gray-600">日期</label>
+            <label class="text-sm text-gray-600">{{ t("date") }}</label>
             <button
               type="button"
               @click="setNowDate"
               class="text-xs px-2 py-1 rounded-md border bg-white text-gray-600 active:scale-95"
-              title="回到今天"
+              :title="todayDateLabel"
             >
-              今日日期
+              {{ t("todayDate") }}
             </button>
           </div>
           <div class="mt-1 w-full overflow-hidden rounded-lg">
@@ -814,29 +903,30 @@ onMounted(async () => {
               class="w-full box-border min-w-0 max-w-full appearance-none rounded-lg border px-3 py-2 bg-white"
             />
           </div>
+          <div class="mt-1 min-h-4 text-xs text-gray-500">{{ selectedDateLabel }}</div>
         </div>
 
         <!-- From + Swap + To -->
-        <div class="col-span-2 md:col-span-2">
+        <div class="col-span-2 md:col-span-1">
           <div class="flex flex-col md:flex-row md:items-end gap-2">
             <div class="w-full md:flex-1 min-w-0">
               <div class="flex items-center justify-between gap-2">
-                <label class="text-sm text-gray-600">起站</label>
+                <label class="text-sm text-gray-600">{{ t("from") }}</label>
                 <button
                   type="button"
                   @click="useNearestStation"
                   :disabled="locating"
                   class="text-xs px-2 py-1 rounded-md border bg-white text-gray-600 active:scale-95 disabled:opacity-50"
-                  title="使用目前位置找最近車站"
+                  :title="t('nearestStation')"
                 >
-                  {{ locating ? "定位中" : "最近車站" }}
+                  {{ locating ? t("locating") : t("nearestStation") }}
                 </button>
               </div>
-              <div class="mt-1 grid grid-cols-[minmax(5rem,0.8fr)_minmax(0,1.2fr)] gap-2">
+              <div class="mt-1 grid grid-cols-[minmax(7.5rem,1.15fr)_minmax(0,1fr)] gap-2">
                 <select
                   v-model="fromRegion"
                   class="w-full min-w-0 rounded-lg border px-3 py-2 bg-white"
-                  aria-label="起站地區"
+                  :aria-label="t('fromRegion')"
                 >
                   <option v-for="region in stationRegions" :key="region.id" :value="region.id">
                     {{ region.label }}
@@ -846,9 +936,9 @@ onMounted(async () => {
                 <select
                   v-model="from"
                   class="w-full min-w-0 rounded-lg border px-3 py-2 bg-white"
-                  aria-label="起站車站"
+                  :aria-label="t('fromStation')"
                 >
-                  <option value="">請選擇</option>
+                  <option value="">{{ t("choose") }}</option>
                   <option v-for="station in stationOptions(fromRegion)" :key="station.code" :value="station.code">
                     {{ station.name }}
                   </option>
@@ -860,8 +950,8 @@ onMounted(async () => {
               type="button"
               @click="swapStations"
               class="self-center mt-4 mb-1 md:mt-0 md:mb-0.5 h-10 w-10 shrink-0 rounded-full border bg-white shadow-sm flex items-center justify-center active:scale-95 rotate-90 md:rotate-0 translate-y-2 md:translate-y-0"
-              aria-label="交換起迄站"
-              title="交換起迄站"
+              :aria-label="t('swapStations')"
+              :title="t('swapStations')"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -880,12 +970,12 @@ onMounted(async () => {
             </button>
 
             <div class="w-full md:flex-1 min-w-0">
-              <label class="text-sm text-gray-600">迄站</label>
-              <div class="mt-1 grid grid-cols-[minmax(5rem,0.8fr)_minmax(0,1.2fr)] gap-2">
+              <label class="text-sm text-gray-600">{{ t("to") }}</label>
+              <div class="mt-1 grid grid-cols-[minmax(7.5rem,1.15fr)_minmax(0,1fr)] gap-2">
                 <select
                   v-model="toRegion"
                   class="w-full min-w-0 rounded-lg border px-3 py-2 bg-white"
-                  aria-label="迄站地區"
+                  :aria-label="t('toRegion')"
                 >
                   <option v-for="region in stationRegions" :key="region.id" :value="region.id">
                     {{ region.label }}
@@ -895,9 +985,9 @@ onMounted(async () => {
                 <select
                   v-model="to"
                   class="w-full min-w-0 rounded-lg border px-3 py-2 bg-white"
-                  aria-label="迄站車站"
+                  :aria-label="t('toStation')"
                 >
-                  <option value="">請選擇</option>
+                  <option value="">{{ t("choose") }}</option>
                   <option v-for="station in stationOptions(toRegion)" :key="station.code" :value="station.code">
                     {{ station.name }}
                   </option>
@@ -910,14 +1000,14 @@ onMounted(async () => {
         <!-- Time -->
         <div class="col-span-2 md:col-span-1">
           <div class="flex items-center justify-between">
-            <label class="text-sm text-gray-600">上車時間</label>
+            <label class="text-sm text-gray-600">{{ t("boardingTime") }}</label>
             <button
               type="button"
               @click="setNowTime"
               class="text-xs px-2 py-1 rounded-md border bg-white text-gray-600 active:scale-95"
-              title="使用現在時間"
+              :title="t('currentTime')"
             >
-              現在時間
+              {{ t("currentTime") }}
             </button>
           </div>
           <div class="mt-1 w-full overflow-hidden rounded-lg">
@@ -932,9 +1022,9 @@ onMounted(async () => {
         <button
           @click="onSearch"
           :disabled="!canSearch"
-          class="col-span-2 md:col-span-4 mt-2 rounded-xl bg-blue-600 py-2 text-white font-medium active:opacity-80 disabled:opacity-50 disabled:cursor-not-allowed"
+          class="col-span-2 md:col-span-3 mt-2 rounded-xl bg-blue-600 py-2 text-white font-medium active:opacity-80 disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          查詢班次
+          {{ t("searchTrains") }}
         </button>
       </div>
     </section>
@@ -948,7 +1038,7 @@ onMounted(async () => {
 
     <!-- Results -->
     <section class="max-w-5xl mx-auto px-4 mt-6 pb-10">
-      <div v-if="loading" class="text-center text-gray-500">查詢中…</div>
+      <div v-if="loading" class="text-center text-gray-500">{{ t("searching") }}</div>
 
       <div v-else-if="directTrainDetail" class="bg-white rounded-xl shadow overflow-hidden">
         <div class="px-4 py-3 border-b flex items-start justify-between gap-3">
@@ -957,7 +1047,7 @@ onMounted(async () => {
               {{ directTrainDetail.trainNo }} {{ directTrainDetail.carName }}
             </div>
             <div v-if="directTrainDetail.rows.length" class="text-sm text-gray-500 mt-0.5">
-              {{ date }} · {{ directTrainDetail.rows[0].name }} → {{ directTrainDetail.rows[directTrainDetail.rows.length - 1].name }}
+              {{ selectedDateLabel }} · {{ directTrainDetail.rows[0].name }} → {{ directTrainDetail.rows[directTrainDetail.rows.length - 1].name }}
             </div>
           </div>
 
@@ -967,14 +1057,14 @@ onMounted(async () => {
               class="text-xs px-3 py-1.5 rounded-lg border bg-white text-gray-600 active:scale-95"
               @click="shareTrain(directTrainDetail.trainNo)"
             >
-              分享
+              {{ t("share") }}
             </button>
             <button
               type="button"
               class="text-xs px-3 py-1.5 rounded-lg border bg-white text-gray-500 active:scale-95"
               @click="clearDirectTrainPage"
             >
-              返回
+              {{ t("back") }}
             </button>
           </div>
         </div>
@@ -994,11 +1084,11 @@ onMounted(async () => {
 
             <div class="text-sm text-gray-700 flex gap-3 shrink-0">
               <div class="text-right">
-                <div class="text-xs text-gray-400">到</div>
+                <div class="text-xs text-gray-400">{{ t("arrival") }}</div>
                 <div>{{ s.arr }}</div>
               </div>
               <div class="text-right">
-                <div class="text-xs text-gray-400">開</div>
+                <div class="text-xs text-gray-400">{{ t("departure") }}</div>
                 <div>{{ s.dep }}</div>
               </div>
             </div>
@@ -1007,7 +1097,7 @@ onMounted(async () => {
       </div>
 
       <div v-else-if="results.length === 0 && !errorMsg" class="text-center text-gray-400">
-        尚無符合條件的班次
+        {{ t("noResults") }}
       </div>
 
       <ul v-else class="space-y-3">
@@ -1030,7 +1120,7 @@ onMounted(async () => {
                   class="text-xs rounded-full border px-2 py-0.5"
                   :class="selectedTrainNo === r.trainNo ? 'bg-slate-100 text-slate-600' : 'bg-white text-gray-400'"
                 >
-                  {{ selectedTrainNo === r.trainNo ? "收合" : "展開" }}
+                  {{ selectedTrainNo === r.trainNo ? t("collapse") : t("expand") }}
                 </span>
               </div>
 
@@ -1039,7 +1129,7 @@ onMounted(async () => {
                 <div
                   class="text-sm font-medium"
                   :class="r.isLocal ? 'text-gray-500' : 'text-red-600'"
-                  :title="r.isLocal ? '區間/區間快' : '非區間（通常較容易客滿）'"
+                  :title="r.isLocal ? t('localTrainTitle') : t('nonLocalTrainTitle')"
                 >
                   {{ r.carName }}
                 </div>
@@ -1053,7 +1143,7 @@ onMounted(async () => {
               {{ r.dep }} → {{ r.arr }}
             </div>
 
-            <div class="mt-2 text-xs text-gray-400">點一下查看全部停靠站</div>
+            <div class="mt-2 text-xs text-gray-400">{{ t("tapForStops") }}</div>
           </button>
 
           <div class="mt-3 flex justify-end">
@@ -1062,7 +1152,7 @@ onMounted(async () => {
               class="text-xs px-3 py-1.5 rounded-lg border bg-white text-gray-600 active:scale-95"
               @click="shareTrain(r.trainNo)"
             >
-              分享此班次
+              {{ t("shareThisTrain") }}
             </button>
           </div>
 
@@ -1070,10 +1160,10 @@ onMounted(async () => {
           <div v-if="selectedTrainNo === r.trainNo" class="mt-3 rounded-xl border bg-slate-50 overflow-hidden">
             <div class="px-3 py-2 text-sm text-gray-600 flex items-center justify-between">
               <div class="font-medium">
-                停靠站（{{ getTrainDetail(r.trainNo)?.rows?.length ?? 0 }}）
+                {{ t("stops") }}（{{ getTrainDetail(r.trainNo)?.rows?.length ?? 0 }}）
               </div>
               <button type="button" class="text-xs text-gray-500 underline" @click="selectedTrainNo = ''">
-                關閉
+                {{ t("close") }}
               </button>
             </div>
 
@@ -1092,11 +1182,11 @@ onMounted(async () => {
 
                 <div class="text-sm text-gray-700 flex gap-3 shrink-0">
                   <div class="text-right">
-                    <div class="text-xs text-gray-400">到</div>
+                    <div class="text-xs text-gray-400">{{ t("arrival") }}</div>
                     <div>{{ s.arr }}</div>
                   </div>
                   <div class="text-right">
-                    <div class="text-xs text-gray-400">開</div>
+                    <div class="text-xs text-gray-400">{{ t("departure") }}</div>
                     <div>{{ s.dep }}</div>
                   </div>
                 </div>

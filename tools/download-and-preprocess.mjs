@@ -93,10 +93,31 @@ function parseListHtml(html) {
   return out;
 }
 
+function trainTypeJaLabel(name, rawName = name) {
+  if (rawName.startsWith("自強(3000)") || name === "自強3000") return "自強(3000)";
+
+  const labels = {
+    自強: "自強号",
+    太魯閣: "タロコ号",
+    普悠瑪: "プユマ号",
+    區間: "区間",
+    區間快: "区間快",
+  };
+  return labels[name] ?? name;
+}
+
+function rawTrainTypeJaLabel(rawName, name) {
+  const normalized = trainTypeJaLabel(name, rawName);
+  if (normalized === name) return rawName;
+
+  const detail = rawName.startsWith("自強(3000)") ? rawName.slice("自強(3000)".length) : rawName.slice(name.length);
+  return detail ? `${normalized}${detail}` : normalized;
+}
+
 function normalizeCarsMap(carsJson) {
   // ✅ New format only:
   // cars.json is an array like:
-  // [{ TrainTypeID, TrainTypeName: { Zh_tw }, ... }, ...]
+  // [{ TrainTypeID, TrainTypeName: { Zh_tw, En }, ... }, ...]
   if (!Array.isArray(carsJson)) {
     throw new Error("cars.json format unexpected (expected an array list)");
   }
@@ -106,9 +127,27 @@ function normalizeCarsMap(carsJson) {
     const id = String(c?.TrainTypeID ?? "");
     if (!id) continue;
 
-    const nameRaw = c?.TrainTypeName?.Zh_tw ?? id;
-    const name = String(nameRaw).replace(/\(.*?\)/g, ""); // keep consistent with UI cleanup
-    map[id] = { name, alias: null };
+    const rawName = String(c?.TrainTypeName?.Zh_tw ?? id);
+    const rawNameEn = String(c?.TrainTypeName?.En ?? "");
+    const name = rawName.replace(/\(.*?\)/g, ""); // keep consistent with UI cleanup
+    map[id] = {
+      labels: {
+        "zh-TW": name,
+        en: rawNameEn || name,
+        ja: trainTypeJaLabel(name, rawName),
+      },
+      rawLabels: {
+        "zh-TW": rawName,
+        en: rawNameEn,
+        ja: rawTrainTypeJaLabel(rawName, name),
+      },
+      name,
+      nameEn: rawNameEn,
+      rawName,
+      rawNameEn,
+      trainTypeCode: c?.TrainTypeCode != null ? String(c.TrainTypeCode) : "",
+      alias: null,
+    };
   }
   return map;
 }
