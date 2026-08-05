@@ -4,7 +4,7 @@ const CANONICAL_HOST = "tra-timetable.cftang.dev";
 const GITHUB_PAGES_PATH = "/tra-timetable";
 import { ref, onMounted, computed, watch } from "vue";
 import { useI18n } from "vue-i18n";
-import { LS_LOCALE, SUPPORTED_LOCALES } from "./i18n";
+import { DEFAULT_LOCALE, LS_LOCALE, SUPPORTED_LOCALES } from "./i18n";
 
 const { locale, t } = useI18n();
 
@@ -136,6 +136,24 @@ function minToHHMM(min) {
 
 function normalizeTrainNo(value) {
   return String(value ?? "").trim().match(/^[A-Za-z0-9]+/)?.[0] ?? "";
+}
+
+function normalizeDateParam(value) {
+  const dateText = String(value ?? "").trim();
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(dateText)) return "";
+
+  const [year, month, day] = dateText.split("-").map(Number);
+  const parsed = new Date(year, month - 1, day);
+  if (
+    parsed.getFullYear() !== year ||
+    parsed.getMonth() !== month - 1 ||
+    parsed.getDate() !== day
+  ) {
+    return "";
+  }
+
+  if (dateText < minDate.value || dateText > maxDate.value) return "";
+  return dateText;
 }
 
 function buildStopMap(stops) {
@@ -391,7 +409,10 @@ async function loadStationRegions() {
 
 /* ---------- load timetable ---------- */
 async function loadDay(yyyy_mm_dd) {
-  const key = yyyy_mm_dd.replaceAll("-", "");
+  const safeDate = normalizeDateParam(yyyy_mm_dd);
+  if (!safeDate) throw new Error(t("noDataForDate"));
+
+  const key = safeDate.replace(/-/g, "");
   const base = `${BASE}/data/days/${key}`;
   const [tRes, sRes] = await Promise.all([
     fetch(`${base}/trains.json`),
@@ -408,19 +429,19 @@ async function loadDay(yyyy_mm_dd) {
   if (!tRes.ok) throw new Error(`trains.json fetch failed: ${tRes.status}`);
   if (!sRes.ok) throw new Error(`stopIndex.json fetch failed: ${sRes.status}`);
 
-  const t = await tRes.json();
-  const idx = await sRes.json();
+  const dayTrains = await tRes.json();
+  const dayStopIndex = await sRes.json();
 
   // ✅ build stopMap (O(1) lookup)
-  for (const trainNo of Object.keys(t)) {
-    const stops = t[trainNo]?.stops;
-    if (Array.isArray(stops) && !t[trainNo].stopMap) {
-      t[trainNo].stopMap = buildStopMap(stops);
+  for (const trainNo of Object.keys(dayTrains)) {
+    const stops = dayTrains[trainNo]?.stops;
+    if (Array.isArray(stops) && !dayTrains[trainNo].stopMap) {
+      dayTrains[trainNo].stopMap = buildStopMap(stops);
     }
   }
 
-  trains.value = t;
-  stopIndex.value = idx;
+  trains.value = dayTrains;
+  stopIndex.value = dayStopIndex;
 }
 
 /* ---------- query ---------- */
@@ -492,10 +513,36 @@ const directTrainDetail = computed(() => getTrainDetail(directTrainNo.value));
 
 function trainShareUrl(trainNo) {
   const normalizedTrainNo = normalizeTrainNo(trainNo);
-  const url = new URL(window.location.href);
-  url.searchParams.set("date", date.value);
+  const normalizedDate = normalizeDateParam(date.value) || minDate.value;
+  const url = new URL(window.location.pathname, window.location.origin);
+  url.searchParams.set("date", normalizedDate);
   url.searchParams.set("train", normalizedTrainNo);
+  if (activeLocale.value !== DEFAULT_LOCALE) url.searchParams.set("lang", activeLocale.value);
   return url.toString();
+}
+
+async function clearBrowserCaches() {
+  try {
+    if ("caches" in window) {
+      const keys = await caches.keys();
+      await Promise.all(keys.map((key) => caches.delete(key)));
+    }
+  } catch {}
+
+  try {
+    if (navigator.serviceWorker?.getRegistrations) {
+      const registrations = await navigator.serviceWorker.getRegistrations();
+      await Promise.all(registrations.map((registration) => registration.unregister()));
+    }
+  } catch {}
+}
+
+function returnToIndexAfterUnsupportedDate() {
+  showToast(t("unsupportedDate"));
+  window.setTimeout(async () => {
+    await clearBrowserCaches();
+    window.location.replace(new URL(window.location.pathname, window.location.origin).toString());
+  }, 900);
 }
 
 function showToast(message) {
@@ -773,12 +820,19 @@ onMounted(async () => {
   const params = new URLSearchParams(window.location.search);
   const sharedDate = params.get("date");
   const rawSharedTrainNo = params.get("train");
+  const normalizedSharedDate = normalizeDateParam(sharedDate);
   const sharedTrainNo = normalizeTrainNo(rawSharedTrainNo);
-  if (sharedDate) date.value = sharedDate;
+  if (sharedDate && !normalizedSharedDate) {
+    returnToIndexAfterUnsupportedDate();
+    return;
+  }
 
-  if (rawSharedTrainNo && sharedTrainNo && rawSharedTrainNo !== sharedTrainNo) {
+  if (normalizedSharedDate) date.value = normalizedSharedDate;
+
+  if (rawSharedTrainNo && rawSharedTrainNo !== sharedTrainNo) {
     const url = new URL(window.location.href);
-    url.searchParams.set("train", sharedTrainNo);
+    if (sharedTrainNo) url.searchParams.set("train", sharedTrainNo);
+    else url.searchParams.delete("train");
     window.history.replaceState({}, "", url.toString());
   }
 
