@@ -72,11 +72,20 @@ function toggleTheme() {
 }
 
 /* ---------- time/date helpers ---------- */
-function yyyymmddLocal(d) {
-  const y = d.getFullYear();
-  const m = String(d.getMonth() + 1).padStart(2, "0");
-  const day = String(d.getDate()).padStart(2, "0");
-  return `${y}-${m}-${day}`;
+function yyyymmddTaipei(offsetDays = 0) {
+  const parts = new Intl.DateTimeFormat("en-CA", {
+    timeZone: "Asia/Taipei",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  }).formatToParts(new Date());
+  const year = Number(parts.find((part) => part.type === "year")?.value);
+  const month = Number(parts.find((part) => part.type === "month")?.value);
+  const day = Number(parts.find((part) => part.type === "day")?.value);
+  const date = new Date(Date.UTC(year, month - 1, day + offsetDays));
+  return `${date.getUTCFullYear()}-${String(date.getUTCMonth() + 1).padStart(2, "0")}-${String(
+    date.getUTCDate(),
+  ).padStart(2, "0")}`;
 }
 
 function hhmmNowTaipei() {
@@ -92,13 +101,8 @@ function hhmmNowTaipei() {
   return `${h}:${m}`;
 }
 
-const today = new Date();
-const minDate = computed(() => yyyymmddLocal(today));
-const maxDate = computed(() => {
-  const d = new Date(today);
-  d.setDate(d.getDate() + 2);
-  return yyyymmddLocal(d);
-});
+const minDate = computed(() => yyyymmddTaipei());
+const maxDate = computed(() => yyyymmddTaipei(2));
 const intlLocale = computed(() => {
   if (activeLocale.value === "en") return "en-US";
   if (activeLocale.value === "ja") return "ja-JP";
