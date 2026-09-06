@@ -87,7 +87,14 @@ jobs:
 
       - run: npm ci
       - run: npm run check:stations
-      - run: npm run build
+      - name: Build static site and generate SEO pages
+        run: npm run build
+
+      - name: Verify generated SEO pages
+        run: |
+          test -f dist/stations/1000/index.html
+          test -f dist/sitemap.xml
+          grep -q 'https://tra-timetable.cftang.dev/stations/1000/' dist/sitemap.xml
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
