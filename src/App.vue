@@ -45,8 +45,6 @@ const LS_FROM = "tra.from";
 const LS_TO = "tra.to";
 const LS_FROM_REGION = "tra.from.region";
 const LS_TO_REGION = "tra.to.region";
-const LS_DATE = "tra.date";
-const LS_TIME = "tra.time";
 const LS_THEME = "tra.theme";
 
 const isDarkTheme = computed(() => theme.value === "dark");
@@ -731,16 +729,14 @@ async function useNearestStation() {
 function loadPreferencesFromLocalStorage() {
   try {
     const savedTheme = localStorage.getItem(LS_THEME);
-    const savedDate = localStorage.getItem(LS_DATE);
-    const savedTime = localStorage.getItem(LS_TIME);
     const f = localStorage.getItem(LS_FROM);
     const t = localStorage.getItem(LS_TO);
     const fr = localStorage.getItem(LS_FROM_REGION);
     const tr = localStorage.getItem(LS_TO_REGION);
 
     applyTheme(savedTheme ?? theme.value);
-    if (savedDate) date.value = savedDate;
-    if (savedTime) time.value = savedTime;
+    localStorage.removeItem("tra.date");
+    localStorage.removeItem("tra.time");
     if (fr) fromRegion.value = fr;
     if (tr) toRegion.value = tr;
     if (f) from.value = f;
@@ -760,20 +756,6 @@ watch(locale, (v) => {
   syncLocaleQuery(v);
   try {
     localStorage.setItem(LS_LOCALE, v);
-  } catch {}
-});
-
-watch(date, (v) => {
-  try {
-    if (v) localStorage.setItem(LS_DATE, v);
-    else localStorage.removeItem(LS_DATE);
-  } catch {}
-});
-
-watch(time, (v) => {
-  try {
-    if (v) localStorage.setItem(LS_TIME, v);
-    else localStorage.removeItem(LS_TIME);
   } catch {}
 });
 
