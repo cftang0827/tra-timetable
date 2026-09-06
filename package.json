@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
+    "postbuild": "node tools/generate-seo-pages.mjs dist",
     "preview": "vite preview",
     "download": "node tools/download-and-preprocess.mjs && npm run generate:station-regions",
     "generate:station-regions": "node tools/generate-station-regions.mjs",

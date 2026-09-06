@@ -63,6 +63,9 @@ export const messages = {
     nonLocalTrainTitle: "非區間（通常較容易客滿）",
     switchLanguage: "選擇語言",
     defaultAnnouncementTitle: "公告",
+    stationInfo: "車站資訊",
+    usageGuide: "使用說明",
+    aboutSite: "關於本站",
   },
   en: {
     appTitle: "TRA Timetable",
@@ -123,6 +126,9 @@ export const messages = {
     nonLocalTrainTitle: "Non-local train",
     switchLanguage: "Select language",
     defaultAnnouncementTitle: "Announcement",
+    stationInfo: "Station information",
+    usageGuide: "Guide",
+    aboutSite: "About",
   },
   ja: {
     appTitle: "台湾鉄道時刻表",
@@ -183,6 +189,9 @@ export const messages = {
     nonLocalTrainTitle: "区間以外の列車",
     switchLanguage: "言語を選択",
     defaultAnnouncementTitle: "お知らせ",
+    stationInfo: "駅情報",
+    usageGuide: "使い方",
+    aboutSite: "このサイトについて",
   },
 };
 

@@ -818,6 +818,7 @@ onMounted(async () => {
   applyTheme(localStorage.getItem(LS_THEME) ?? theme.value);
   loadPreferencesFromLocalStorage();
   const params = new URLSearchParams(window.location.search);
+  const sharedStationCode = params.get("station");
   const sharedDate = params.get("date");
   const rawSharedTrainNo = params.get("train");
   const normalizedSharedDate = normalizeDateParam(sharedDate);
@@ -840,6 +841,10 @@ onMounted(async () => {
     await Promise.all([loadCars(), loadStationRegions()]);
   } catch (e) {
     errorMsg.value = e?.message ?? String(e);
+  }
+
+  if (sharedStationCode && stationByCode.value.has(sharedStationCode)) {
+    from.value = sharedStationCode;
   }
 
   syncRegionForStation(from.value, fromRegion);
@@ -1327,6 +1332,14 @@ onMounted(async () => {
         </li>
       </ul>
     </section>
+
+    <footer class="max-w-5xl mx-auto px-4 pb-8 text-center text-sm text-gray-500">
+      <a class="underline" href="/stations/">{{ t("stationInfo") }}</a>
+      <span class="mx-2">·</span>
+      <a class="underline" href="/guide/">{{ t("usageGuide") }}</a>
+      <span class="mx-2">·</span>
+      <a class="underline" href="/about/">{{ t("aboutSite") }}</a>
+    </footer>
 
     <div
       v-if="toastMsg"
