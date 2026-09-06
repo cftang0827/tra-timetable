@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="index,follow" />
+    <meta
+      name="description"
+      content="台鐵班次查詢的資料來源、更新方式、限制與本站用途說明。本站整理台鐵公開資料，提供出發前時刻表查詢參考。"
+    />
+    <link rel="canonical" href="https://tra-timetable.cftang.dev/about/" />
+    <meta property="og:type" content="article" />
+    <meta property="og:site_name" content="台鐵班次查詢" />
+    <meta property="og:title" content="資料來源與關於本站｜台鐵班次查詢" />
+    <meta
+      property="og:description"
+      content="了解本站使用的台鐵公開資料、更新流程與非即時資訊限制。"
+    />
+    <meta property="og:url" content="https://tra-timetable.cftang.dev/about/" />
+    <meta property="og:image" content="https://tra-timetable.cftang.dev/logo.png" />
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="資料來源與關於本站｜台鐵班次查詢" />
+    <meta
+      name="twitter:description"
+      content="本站整理台鐵公開班次與車站資料，提供出發前時刻表查詢參考。"
+    />
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "台鐵班次查詢",
+            "item": "https://tra-timetable.cftang.dev/"
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "資料來源與關於本站",
+            "item": "https://tra-timetable.cftang.dev/about/"
+          }
+        ]
+      }
+    </script>
+    <title>資料來源與關於本站｜台鐵班次查詢</title>
+    <style>
+      body {
+        margin: 0;
+        background: #f8fafc;
+        color: #1f2937;
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        line-height: 1.75;
+      }
+      header,
+      main,
+      footer {
+        max-width: 880px;
+        margin: 0 auto;
+        padding: 24px;
+      }
+      header {
+        padding-top: 32px;
+      }
+      nav {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-top: 16px;
+      }
+      a {
+        color: #2563eb;
+      }
+      h1 {
+        margin: 0;
+        color: #0f172a;
+        font-size: clamp(2rem, 5vw, 3rem);
+        line-height: 1.2;
+      }
+      h2 {
+        margin-top: 32px;
+        color: #111827;
+        font-size: 1.25rem;
+      }
+      .panel {
+        background: #ffffff;
+        border: 1px solid #e5e7eb;
+        border-radius: 8px;
+        padding: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <p><a href="/">返回台鐵時刻表查詢</a></p>
+      <h1>資料來源與關於本站</h1>
+      <p>
+        台鐵班次查詢是一個靜態網頁工具，目標是讓使用者在出發前用少量步驟查到可搭乘班次、完整停靠站與可分享的班次連結。
+      </p>
+      <nav aria-label="主要頁面">
+        <a href="/">時刻表查詢</a>
+        <a href="/stations/">車站資訊</a>
+        <a href="/guide/">使用說明</a>
+      </nav>
+    </header>
+    <main>
+      <section class="panel">
+        <h2>班次資料</h2>
+        <p>
+          班次資料由專案更新工具從台鐵公開時刻表資料下載後預處理，整理成每日列車索引與站碼索引，讓瀏覽器可以快速比對起站、迄站與出發時間。本站目前只顯示已產生資料的日期範圍。
+        </p>
+      </section>
+
+      <section>
+        <h2>車站資料</h2>
+        <p>
+          車站基本資料使用政府資料開放平台「臺鐵車站基本資料集」，提供站碼、站名、英文名與座標等資訊。本站另外整理地區分組與日文站名對照，提升查詢介面的可讀性。
+        </p>
+      </section>
+
+      <section>
+        <h2>更新方式</h2>
+        <p>
+          本站不是即時查詢服務，而是透過專案資料更新流程重新下載、轉換並部署靜態 JSON。更新後的資料會隨網站部署一起發布；若資料尚未產生，對應日期會顯示不支援或查無資料。
+        </p>
+      </section>
+
+      <section>
+        <h2>重要限制</h2>
+        <p>
+          本工具不代表台鐵官方服務，也不提供即時誤點、臨時停駛、月台、票價或餘票資訊。實際搭乘前請再次確認台鐵官方公告、車站現場資訊與列車運行狀態。
+        </p>
+      </section>
+    </main>
+    <footer>
+      <p>想知道如何操作查詢表單，請閱讀 <a href="/guide/">使用說明</a>。</p>
+    </footer>
+  </body>
+</html>

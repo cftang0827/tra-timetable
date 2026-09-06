@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="index,follow" />
+    <meta
+      name="description"
+      content="了解台鐵班次查詢使用的車站資料、地區分組與多語站名來源，包含北北基、桃竹苗、中彰、雲嘉南、高屏、宜蘭、花東與支線。"
+    />
+    <link rel="canonical" href="https://tra-timetable.cftang.dev/stations/" />
+    <meta property="og:type" content="article" />
+    <meta property="og:site_name" content="台鐵班次查詢" />
+    <meta property="og:title" content="台鐵車站資訊｜地區分組與站名資料" />
+    <meta
+      property="og:description"
+      content="本站如何整理台鐵車站資料、地區分組、GPS 與多語站名，協助使用者更快選擇起迄站。"
+    />
+    <meta property="og:url" content="https://tra-timetable.cftang.dev/stations/" />
+    <meta property="og:image" content="https://tra-timetable.cftang.dev/logo.png" />
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="台鐵車站資訊｜地區分組與站名資料" />
+    <meta
+      name="twitter:description"
+      content="了解本站使用的台鐵車站資料、地區分組、GPS 與多語站名來源。"
+    />
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "台鐵班次查詢",
+            "item": "https://tra-timetable.cftang.dev/"
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "車站資訊",
+            "item": "https://tra-timetable.cftang.dev/stations/"
+          }
+        ]
+      }
+    </script>
+    <title>台鐵車站資訊｜地區分組與站名資料</title>
+    <style>
+      body {
+        margin: 0;
+        background: #f8fafc;
+        color: #1f2937;
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        line-height: 1.75;
+      }
+      header,
+      main,
+      footer {
+        max-width: 880px;
+        margin: 0 auto;
+        padding: 24px;
+      }
+      header {
+        padding-top: 32px;
+      }
+      nav {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-top: 16px;
+      }
+      a {
+        color: #2563eb;
+      }
+      h1 {
+        margin: 0;
+        color: #0f172a;
+        font-size: clamp(2rem, 5vw, 3rem);
+        line-height: 1.2;
+      }
+      h2 {
+        margin-top: 32px;
+        color: #111827;
+        font-size: 1.25rem;
+      }
+      .panel {
+        background: #ffffff;
+        border: 1px solid #e5e7eb;
+        border-radius: 8px;
+        padding: 20px;
+      }
+      ul {
+        padding-left: 1.25rem;
+      }
+      .station-list {
+        columns: 2 12rem;
+        column-gap: 2rem;
+      }
+      .station-list li {
+        break-inside: avoid;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <p><a href="/">返回台鐵時刻表查詢</a></p>
+      <h1>台鐵車站資訊</h1>
+      <p>
+        本頁說明本站如何整理台鐵車站資料，讓時刻表查詢時能用地區、站名與定位快速選擇起站和迄站。
+      </p>
+      <nav aria-label="主要頁面">
+        <a href="/">時刻表查詢</a>
+        <a href="/guide/">使用說明</a>
+        <a href="/about/">資料來源 / 關於本站</a>
+      </nav>
+    </header>
+    <main>
+      <section class="panel">
+        <h2>車站資料包含哪些內容</h2>
+        <p>
+          車站清單來自政府資料開放平台的台鐵車站基本資料，本站在預處理時保留站碼、中文站名、英文站名與 GPS 座標，並補上日文官方站名對照。查詢表單使用站碼比對班次停靠資料，畫面則依目前語言顯示對應站名。
+        </p>
+      </section>
+
+      <section>
+        <h2>地區分組</h2>
+        <p>
+          為了讓手機上也能較快找到車站，本站把車站分成北北基、桃竹苗、中彰、雲嘉南、高屏、宜蘭、花東與支線。這些分組只是查詢介面的輔助，不代表官方路線分類或營運區間。
+        </p>
+      </section>
+
+      <section>
+        <h2>最近車站功能</h2>
+        <p>
+          若瀏覽器允許定位，本站會用車站 GPS 座標估算距離最近的台鐵車站，並自動填入起站。定位只在瀏覽器端用來計算最近車站，不會是班次資料來源；實際搭車仍需確認車站位置與交通時間。
+        </p>
+      </section>
+
+      <section>
+        <h2>站名與語言</h2>
+        <p>
+          繁體中文與英文站名來自車站資料；日文站名以台鐵日文官方網站可查得的名稱為準。若找不到可信的日文名稱，本站會保留原始中文站名，避免自行翻譯造成混淆。
+        </p>
+      </section>
+
+      <!-- station-directory -->
+    </main>
+    <footer>
+      <p>資料仍可能因官方調整而變動，請以台鐵官方公告與現場資訊為準。</p>
+    </footer>
+  </body>
+</html>

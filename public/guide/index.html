@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="index,follow" />
+    <meta
+      name="description"
+      content="台鐵時刻表查詢使用說明：如何選擇日期、起迄站、上車時間，查看停靠站並分享單一班次連結。"
+    />
+    <link rel="canonical" href="https://tra-timetable.cftang.dev/guide/" />
+    <meta property="og:type" content="article" />
+    <meta property="og:site_name" content="台鐵班次查詢" />
+    <meta property="og:title" content="台鐵時刻表查詢使用說明" />
+    <meta
+      property="og:description"
+      content="了解如何使用本站查詢台鐵班次、查看完整停靠站與分享單一班次連結。"
+    />
+    <meta property="og:url" content="https://tra-timetable.cftang.dev/guide/" />
+    <meta property="og:image" content="https://tra-timetable.cftang.dev/logo.png" />
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="台鐵時刻表查詢使用說明" />
+    <meta
+      name="twitter:description"
+      content="如何選擇日期、起迄站、上車時間，查看停靠站並分享班次。"
+    />
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "台鐵班次查詢",
+            "item": "https://tra-timetable.cftang.dev/"
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "使用說明",
+            "item": "https://tra-timetable.cftang.dev/guide/"
+          }
+        ]
+      }
+    </script>
+    <title>台鐵時刻表查詢使用說明</title>
+    <style>
+      body {
+        margin: 0;
+        background: #f8fafc;
+        color: #1f2937;
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        line-height: 1.75;
+      }
+      header,
+      main,
+      footer {
+        max-width: 880px;
+        margin: 0 auto;
+        padding: 24px;
+      }
+      header {
+        padding-top: 32px;
+      }
+      nav {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-top: 16px;
+      }
+      a {
+        color: #2563eb;
+      }
+      h1 {
+        margin: 0;
+        color: #0f172a;
+        font-size: clamp(2rem, 5vw, 3rem);
+        line-height: 1.2;
+      }
+      h2 {
+        margin-top: 32px;
+        color: #111827;
+        font-size: 1.25rem;
+      }
+      .panel {
+        background: #ffffff;
+        border: 1px solid #e5e7eb;
+        border-radius: 8px;
+        padding: 20px;
+      }
+      ol {
+        padding-left: 1.25rem;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <p><a href="/">返回台鐵時刻表查詢</a></p>
+      <h1>台鐵時刻表查詢使用說明</h1>
+      <p>
+        本站適合在出發前快速確認台鐵班次、停靠站與可分享的班次連結。以下是最常用的查詢流程與注意事項。
+      </p>
+      <nav aria-label="主要頁面">
+        <a href="/">時刻表查詢</a>
+        <a href="/stations/">車站資訊</a>
+        <a href="/about/">資料來源 / 關於本站</a>
+      </nav>
+    </header>
+    <main>
+      <section class="panel">
+        <h2>基本查詢流程</h2>
+        <ol>
+          <li>選擇出發日期。本站只提供目前資料已產生的近期日期。</li>
+          <li>選擇起站與迄站，可先用地區分組縮小車站清單。</li>
+          <li>設定預計上車時間，查詢結果會列出該時間之後可搭乘的班次。</li>
+          <li>點開班次卡片即可查看完整停靠站、到站時間與開車時間。</li>
+        </ol>
+      </section>
+
+      <section>
+        <h2>分享單一班次</h2>
+        <p>
+          查詢結果中的分享按鈕會產生包含日期與車次的連結。對方打開後可直接看到該班列車的停靠站資料，適合和同行者確認同一班車。
+        </p>
+      </section>
+
+      <section>
+        <h2>查詢結果如何解讀</h2>
+        <p>
+          結果中的時間以資料內的時刻表為準，並非即時到離站資訊。若遇到颱風、事故、施工、臨時加班車或停駛，請以台鐵官方網站、App、車站廣播與現場公告為準。
+        </p>
+      </section>
+
+      <section>
+        <h2>語言與偏好</h2>
+        <p>
+          介面支援繁體中文、英文與日文。瀏覽器會記住語言、主題、日期、時間與常用起迄站等偏好，方便下次快速查詢。
+        </p>
+      </section>
+    </main>
+    <footer>
+      <p>需要了解資料來源與更新方式，請閱讀 <a href="/about/">資料來源 / 關於本站</a>。</p>
+    </footer>
+  </body>
+</html>
