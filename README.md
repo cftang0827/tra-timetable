@@ -1,6 +1,6 @@
 # 台鐵班次查詢
 
-台鐵班次查詢是一個 Vue 3 + Vite 製作的靜態網頁 App，用來查詢台鐵班次、停靠站與分享單一班次頁面。專案目前部署為 GitHub Pages 靜態站，也支援自訂網域 `tra-timetable.cftang.dev`。
+台鐵班次查詢是一個 SSG 優先的靜態網站。首頁、說明、車站與車站個別頁面會在 build 時產生可直接索引的 HTML；Vue 3 + Vite 查詢工具位於 `/app/`。專案部署為 GitHub Pages，也支援自訂網域 `tra-timetable.cftang.dev`。
 
 本專案只使用台鐵公開班次與車站資料，不串接即時動態 API。因此顯示內容是班次資料，不代表列車即時位置、誤點狀態或實際到點時間。
 
@@ -40,6 +40,11 @@ public/
       stationJaLabels.json# 台鐵日文官方站名對照
       news.json           # 最新消息，多語內容
 
+dist/（建置產物）
+  index.html              # SSG 首頁
+  app/                    # Vue 查詢工具
+  api/v1/index.json       # 靜態 JSON 資源 manifest
+
 tools/
   download-and-preprocess.mjs    # 下載台鐵班次資料並產生 days/meta
   generate-station-regions.mjs   # 由 stations.json 產生 stationRegions.json
@@ -51,29 +56,30 @@ tools/
 
 本專案以 Docker Compose 作為主要開發 workflow。請優先在 container 裡執行 Node/npm 相關命令。
 
-啟動 local dev server：
+啟動完整本機預覽站：
 
 ```sh
-docker compose up
+make dev
 ```
 
-Compose 會執行：
+Compose 會先 build（包含靜態頁產生），再用 HTTP preview server 提供完整網站：
 
 ```sh
-npm ci && npm run download && npm run dev -- --host 0.0.0.0
+npm ci && npm run build && npm run preview -- --host 0.0.0.0 --port 5173
 ```
 
 本機網址：
 
 ```text
-http://localhost:5173/tra-timetable/
+http://localhost:5173/
+
+查詢工具位於 `http://localhost:5173/app/`。這個流程刻意不使用 Vite HMR，因為它要驗收的是真正 build 後的靜態路徑與產物。
 ```
 
 如果服務已經在背景執行，可用：
 
 ```sh
-docker compose ps
-docker compose logs app
+make logs
 ```
 
 ## 常用指令
@@ -81,18 +87,15 @@ docker compose logs app
 所有 npm 指令建議透過 compose 執行：
 
 ```sh
-docker compose exec app npm run build
-docker compose exec app npm run check:stations
-docker compose exec app npm run download
-docker compose exec app npm run generate:station-regions
+make build
+make check
+make data
 ```
 
 更新台鐵日文站名：
 
 ```sh
-docker compose exec app node tools/update-ja-station-labels.mjs
-docker compose exec app npm run generate:station-regions
-docker compose exec app npm run check:stations
+make ja-labels
 ```
 
 ## 資料來源與更新
@@ -198,9 +201,9 @@ UI 文字放在 `src/i18n.js`：
 5. 執行：
 
 ```sh
-docker compose exec app npm run download
-docker compose exec app npm run check:stations
-docker compose exec app npm run build
+make data
+make check
+make build
 ```
 
 ## 下次接續開發建議流程
@@ -211,16 +214,16 @@ docker compose exec app npm run build
 git status --short
 ```
 
-2. 啟動 Docker Compose：
+2. 建置並啟動完整本機預覽站：
 
 ```sh
-docker compose up
+make dev
 ```
 
 3. 開啟本機站台：
 
 ```text
-http://localhost:5173/tra-timetable/
+http://localhost:5173/
 ```
 
 4. 修改前先讀這幾個核心檔：
@@ -235,19 +238,21 @@ http://localhost:5173/tra-timetable/
 5. 完成修改後至少執行：
 
 ```sh
-docker compose exec app npm run check:stations
-docker compose exec app npm run build
+make check
+make build
 ```
 
 如果改到資料下載或 metadata，建議再執行：
 
 ```sh
-docker compose exec app npm run download
+make data
 ```
 
 ## 部署
 
-GitHub Actions 會 build 並部署到 GitHub Pages。`public/CNAME` 會讓 GitHub Pages 使用：
+GitHub Actions 會 build 並部署到 GitHub Pages。根網址是可索引的 SSG 首頁，查詢工具位於 `/app/`；`/api/v1/index.json` 會列出可用的 metadata JSON 與每日班次 JSON URL 模板。`public/CNAME` 會讓 GitHub Pages 使用：
+
+日常開發預覽可使用 `make preview`：它會先同步到 CU，再重建遠端 Docker preview。正式 Pages 部署則先執行 `make deploy-pages`，確認通過後自行 commit 並 push，由 GitHub Actions 發布。
 
 ```text
 tra-timetable.cftang.dev

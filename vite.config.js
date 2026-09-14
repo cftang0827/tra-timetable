@@ -1,10 +1,18 @@
 import { defineConfig } from "vite";
+import { fileURLToPath, URL } from "node:url";
 import vue from "@vitejs/plugin-vue";
 import tailwindcss from "@tailwindcss/vite";
 import { VitePWA } from "vite-plugin-pwa";
 
 export default defineConfig({
-  base: "./",
+  base: "/",
+  build: {
+    rollupOptions: {
+      input: {
+        app: fileURLToPath(new URL("./app/index.html", import.meta.url)),
+      },
+    },
+  },
   plugins: [
     vue(),
     tailwindcss(),
@@ -18,8 +26,8 @@ export default defineConfig({
         theme_color: "#0f172a",
         background_color: "#ffffff",
         display: "standalone",
-        scope: "./",
-        start_url: "./",
+        scope: "/",
+        start_url: "/app/",
         icons: [
           {
             src: "pwa-192x192.png",

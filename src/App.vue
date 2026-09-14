@@ -1,8 +1,9 @@
 <script setup>
 const BASE = import.meta.env.BASE_URL.replace(/\/$/, "");
+const API_BASE = `${BASE}/api/v1`;
 const CANONICAL_HOST = "tra-timetable.cftang.dev";
 const GITHUB_PAGES_PATH = "/tra-timetable";
-import { ref, onMounted, computed, watch } from "vue";
+import { ref, onBeforeUnmount, onMounted, computed, watch } from "vue";
 import { useI18n } from "vue-i18n";
 import { DEFAULT_LOCALE, LS_LOCALE, SUPPORTED_LOCALES } from "./i18n";
 
@@ -30,6 +31,9 @@ const locating = ref(false);
 const directTrainNo = ref("");
 const toastMsg = ref("");
 let toastTimer = null;
+const deferredInstallPrompt = ref(null);
+const showInstallHelp = ref(false);
+const isInstalled = ref(false);
 
 /* ✅ train detail (accordion) */
 const selectedTrainNo = ref(""); // currently opened train
@@ -48,12 +52,8 @@ const LS_TO_REGION = "tra.to.region";
 const LS_THEME = "tra.theme";
 
 const isDarkTheme = computed(() => theme.value === "dark");
+const showInstallButton = computed(() => !isInstalled.value);
 const activeLocale = computed(() => locale.value);
-const localeOptions = [
-  { value: "zh-TW", label: "🇹🇼 中文" },
-  { value: "en", label: "🇺🇸 EN" },
-  { value: "ja", label: "🇯🇵 日本語" },
-];
 const localeMeta = {
   "zh-TW": { htmlLang: "zh-Hant-TW", ogLocale: "zh_TW", urlLang: "zh-TW" },
   en: { htmlLang: "en", ogLocale: "en_US", urlLang: "en" },
@@ -66,9 +66,29 @@ function applyTheme(nextTheme) {
   document.documentElement.style.colorScheme = isDarkTheme.value ? "dark" : "light";
 }
 
-function toggleTheme() {
-  applyTheme(isDarkTheme.value ? "light" : "dark");
-  showToast(isDarkTheme.value ? t("darkMode") : t("lightMode"));
+function isAppleMobile() {
+  return /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+}
+
+async function installApp() {
+  if (deferredInstallPrompt.value) {
+    deferredInstallPrompt.value.prompt();
+    await deferredInstallPrompt.value.userChoice;
+    deferredInstallPrompt.value = null;
+    return;
+  }
+  showInstallHelp.value = true;
+}
+
+function onBeforeInstallPrompt(event) {
+  event.preventDefault();
+  deferredInstallPrompt.value = event;
+}
+
+function onAppInstalled() {
+  deferredInstallPrompt.value = null;
+  isInstalled.value = true;
+  showInstallHelp.value = false;
 }
 
 /* ---------- time/date helpers ---------- */
@@ -208,7 +228,7 @@ function setMetaByProperty(property, content) {
 }
 
 function currentSeoUrl(localeValue = activeLocale.value) {
-  const url = new URL(`https://${CANONICAL_HOST}/`);
+  const url = new URL(`https://${CANONICAL_HOST}/app/`);
   if (localeValue !== "zh-TW") url.searchParams.set("lang", localeValue);
   return url.toString();
 }
@@ -362,7 +382,7 @@ async function loadNews() {
   newsLoading.value = true;
   newsError.value = "";
   try {
-    const res = await fetch(`${BASE}/data/meta/news.json`, { cache: "no-store" });
+    const res = await fetch(`${API_BASE}/news.json`, { cache: "no-store" });
     if (res.status === 404) {
       newsItems.value = [];
       return;
@@ -391,13 +411,13 @@ function closeNews() {
 
 /* ---------- load meta ---------- */
 async function loadCars() {
-  const res = await fetch(`${BASE}/data/meta/carsMap.json`);
+  const res = await fetch(`${API_BASE}/cars.json`);
   if (!res.ok) throw new Error(`carsMap.json fetch failed: ${res.status}`);
   carsMap.value = await res.json();
 }
 
 async function loadStationRegions() {
-  const res = await fetch(`${BASE}/data/meta/stationRegions.json`);
+  const res = await fetch(`${API_BASE}/stations.json`);
   if (!res.ok) throw new Error(`stationRegions.json fetch failed: ${res.status}`);
 
   const data = await res.json();
@@ -802,6 +822,9 @@ onMounted(async () => {
   date.value = minDate.value;
   time.value = hhmmNowTaipei();
   applyTheme(localStorage.getItem(LS_THEME) ?? theme.value);
+  isInstalled.value = window.matchMedia("(display-mode: standalone)").matches || window.navigator.standalone === true;
+  window.addEventListener("beforeinstallprompt", onBeforeInstallPrompt);
+  window.addEventListener("appinstalled", onAppInstalled);
   loadPreferencesFromLocalStorage();
   const params = new URLSearchParams(window.location.search);
   const sharedStationCode = params.get("station");
@@ -838,95 +861,30 @@ onMounted(async () => {
 
   if (sharedTrainNo) await openDirectTrainPage(sharedTrainNo);
 });
+
+onBeforeUnmount(() => {
+  window.removeEventListener("beforeinstallprompt", onBeforeInstallPrompt);
+  window.removeEventListener("appinstalled", onAppInstalled);
+});
 </script>
 
 <template>
   <div class="min-h-screen bg-slate-50">
-    <!-- Header -->
-    <header class="sticky top-0 z-10 bg-white shadow-sm">
-      <div class="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between">
-        <h1 class="text-lg font-semibold">{{ t("appTitle") }}</h1>
+    <component is="site-nav" :locale="activeLocale"></component>
 
-        <div class="flex items-center gap-2">
-          <select
-            v-model="locale"
-            class="h-9 w-24 rounded-lg border bg-white px-2 text-sm text-gray-700 shadow-sm"
-            :title="t('switchLanguage')"
-            :aria-label="t('switchLanguage')"
-          >
-            <option v-for="option in localeOptions" :key="option.value" :value="option.value">
-              {{ option.label }}
-            </option>
-          </select>
-
-          <button
-            type="button"
-            @click="toggleTheme"
-            class="h-9 w-9 rounded-lg border bg-white text-gray-700 shadow-sm active:scale-95 flex items-center justify-center"
-            :title="isDarkTheme ? t('switchToLight') : t('switchToDark')"
-            :aria-label="isDarkTheme ? t('switchToLight') : t('switchToDark')"
-          >
-            <svg
-              v-if="isDarkTheme"
-              xmlns="http://www.w3.org/2000/svg"
-              class="h-5 w-5"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              stroke-width="2"
-              aria-hidden="true"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                d="M12 3v2m0 14v2m9-9h-2M5 12H3m15.36 6.36-1.42-1.42M7.05 7.05 5.64 5.64m12.72 0-1.42 1.41M7.05 16.95l-1.41 1.41M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8Z"
-              />
-            </svg>
-            <svg
-              v-else
-              xmlns="http://www.w3.org/2000/svg"
-              class="h-5 w-5"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              stroke-width="2"
-              aria-hidden="true"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                d="M21 12.8A8.5 8.5 0 1 1 11.2 3a6.5 6.5 0 0 0 9.8 9.8Z"
-              />
-            </svg>
-          </button>
-
-          <button
-            type="button"
-            @click="openNews"
-            class="h-9 w-[6.75rem] rounded-lg border bg-white px-3 text-gray-700 shadow-sm active:scale-95 flex items-center justify-center gap-1.5"
-            :title="t('latestNews')"
-            :aria-label="t('latestNews')"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              class="h-5 w-5"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              stroke-width="2"
-              aria-hidden="true"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                d="M7 8h10M7 12h6m-8 8h14a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2Z"
-              />
-            </svg>
-            <span class="w-14 text-center text-sm font-medium truncate">{{ t("latestNews") }}</span>
-          </button>
+    <div v-if="showInstallHelp" class="fixed inset-0 z-30 flex items-center justify-center bg-black/30 p-4" @click.self="showInstallHelp = false">
+      <section class="w-full max-w-md rounded-xl bg-white p-5 shadow-xl" role="dialog" aria-modal="true" :aria-label="t('installApp')">
+        <div class="flex items-start justify-between gap-4">
+          <div>
+            <h2 class="text-base font-semibold text-gray-900">{{ t("installApp") }}</h2>
+            <p class="mt-2 text-sm leading-6 text-gray-600">
+              {{ isAppleMobile() ? t("installAppleHelp") : t("installBrowserHelp") }}
+            </p>
+          </div>
+          <button type="button" class="text-sm text-gray-500 underline" @click="showInstallHelp = false">{{ t("close") }}</button>
         </div>
-      </div>
-    </header>
+      </section>
+    </div>
 
     <!-- ✅ Latest News Drawer -->
     <div v-if="showNews" class="fixed inset-0 z-20">
@@ -957,9 +915,6 @@ onMounted(async () => {
 
           <div v-else-if="newsItems.length === 0" class="text-sm text-gray-500">
             {{ t("noNews") }}
-            <div class="mt-2 text-xs text-gray-400">
-              {{ t("newsHint") }}<span class="font-mono">public/data/meta/news.json</span>
-            </div>
           </div>
 
           <ul v-else class="space-y-3">

@@ -6,15 +6,15 @@
     <meta name="robots" content="index,follow" />
     <meta
       name="description"
-      content="了解台鐵班次查詢使用的車站資料、地區分組與多語站名來源，包含北北基、桃竹苗、中彰、雲嘉南、高屏、宜蘭、花東與支線。"
+      content="查看全台台鐵車站，依北北基、桃竹苗、中彰、雲嘉南、高屏、宜蘭、花東與支線快速找車站並查詢台鐵時刻表。"
     />
     <link rel="canonical" href="https://tra-timetable.cftang.dev/stations/" />
     <meta property="og:type" content="article" />
     <meta property="og:site_name" content="台鐵班次查詢" />
-    <meta property="og:title" content="台鐵車站資訊｜地區分組與站名資料" />
+    <meta property="og:title" content="台鐵車站一覽｜全台火車站與時刻表查詢" />
     <meta
       property="og:description"
-      content="本站如何整理台鐵車站資料、地區分組、GPS 與多語站名，協助使用者更快選擇起迄站。"
+      content="找車站、選出發站，直接開始查台鐵時刻表。"
     />
     <meta property="og:url" content="https://tra-timetable.cftang.dev/stations/" />
     <meta property="og:image" content="https://tra-timetable.cftang.dev/logo.png" />
@@ -44,7 +44,7 @@
         ]
       }
     </script>
-    <title>台鐵車站資訊｜地區分組與站名資料</title>
+    <title>台鐵車站一覽｜全台火車站與時刻表查詢</title>
     <style>
       body {
         margin: 0;
@@ -53,21 +53,15 @@
         font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
         line-height: 1.75;
       }
-      header,
+      .page-header,
       main,
       footer {
         max-width: 880px;
         margin: 0 auto;
         padding: 24px;
       }
-      header {
+      .page-header {
         padding-top: 32px;
-      }
-      nav {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 12px;
-        margin-top: 16px;
       }
       a {
         color: #2563eb;
@@ -100,53 +94,37 @@
         break-inside: avoid;
       }
     </style>
+    <link rel="stylesheet" href="/site-nav.css" />
+    <script src="/site-nav.js" defer></script>
   </head>
   <body>
-    <header>
+    <site-nav></site-nav>
+    <header class="page-header">
       <p><a href="/">返回台鐵時刻表查詢</a></p>
-      <h1>台鐵車站資訊</h1>
+      <h1>台鐵車站一覽</h1>
       <p>
-        本頁說明本站如何整理台鐵車站資料，讓時刻表查詢時能用地區、站名與定位快速選擇起站和迄站。
+        找台鐵車站可以直接從地區選，也可以回到時刻表查詢出發站和目的地。
       </p>
-      <nav aria-label="主要頁面">
-        <a href="/">時刻表查詢</a>
-        <a href="/guide/">使用說明</a>
-        <a href="/about/">資料來源 / 關於本站</a>
-      </nav>
     </header>
     <main>
-      <section class="panel">
-        <h2>車站資料包含哪些內容</h2>
+      <section>
+        <h2>依地區找車站</h2>
         <p>
-          車站清單來自政府資料開放平台的台鐵車站基本資料，本站在預處理時保留站碼、中文站名、英文站名與 GPS 座標，並補上日文官方站名對照。查詢表單使用站碼比對班次停靠資料，畫面則依目前語言顯示對應站名。
+          台鐵車站依地區整理成北北基、桃竹苗、中彰、雲嘉南、高屏、宜蘭、花東與支線，找車站比較快。
         </p>
       </section>
 
       <section>
-        <h2>地區分組</h2>
+        <h2>找離你最近的車站</h2>
         <p>
-          為了讓手機上也能較快找到車站，本站把車站分成北北基、桃竹苗、中彰、雲嘉南、高屏、宜蘭、花東與支線。這些分組只是查詢介面的輔助，不代表官方路線分類或營運區間。
-        </p>
-      </section>
-
-      <section>
-        <h2>最近車站功能</h2>
-        <p>
-          若瀏覽器允許定位，本站會用車站 GPS 座標估算距離最近的台鐵車站，並自動填入起站。定位只在瀏覽器端用來計算最近車站，不會是班次資料來源；實際搭車仍需確認車站位置與交通時間。
-        </p>
-      </section>
-
-      <section>
-        <h2>站名與語言</h2>
-        <p>
-          繁體中文與英文站名來自車站資料；日文站名以台鐵日文官方網站可查得的名稱為準。若找不到可信的日文名稱，本站會保留原始中文站名，避免自行翻譯造成混淆。
+          如果允許瀏覽器取得位置，查時刻表時可以自動帶入離你最近的台鐵車站。
         </p>
       </section>
 
       <!-- station-directory -->
     </main>
     <footer>
-      <p>資料仍可能因官方調整而變動，請以台鐵官方公告與現場資訊為準。</p>
+      <p>車站與時刻表資料可能因官方調整而變動，實際資訊請以台鐵公告及現場為準。</p>
     </footer>
   </body>
 </html>

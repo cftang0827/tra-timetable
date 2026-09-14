@@ -92,8 +92,22 @@ jobs:
 
       - name: Verify generated SEO pages
         run: |
+          test -f dist/index.html
+          test -f dist/guide/index.html
+          test -f dist/about/index.html
+          test -f dist/stations/index.html
+          test -f dist/news/index.html
+          test -f dist/en/stations/index.html
+          test -f dist/en/guide/index.html
+          test -f dist/en/about/index.html
+          test -f dist/ja/stations/index.html
+          test -f dist/ja/guide/index.html
+          test -f dist/ja/about/index.html
           test -f dist/stations/1000/index.html
           test -f dist/sitemap.xml
+          grep -q '<h1>台鐵時刻表查詢</h1>' dist/index.html
+          grep -q '<h1>台鐵時刻表查詢說明</h1>' dist/guide/index.html
+          grep -q '<h1>臺北車站時刻表</h1>' dist/stations/1000/index.html
           grep -q 'https://tra-timetable.cftang.dev/stations/1000/' dist/sitemap.xml
 
       - name: Upload Pages artifact

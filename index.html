@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta
       name="description"
-      content="快速查詢台鐵班次、起迄站、停靠站與分享單一班次連結。支援繁體中文、英文、日文，資料來源源自台鐵公開資料。"
+      content="快速查詢台鐵時刻表與火車班次，選擇日期、出發站、抵達站與時間，即可查看車次、出發時間、抵達時間及沿途停靠站。"
     />
     <meta name="keywords" content="台鐵班次查詢,台鐵時刻表,台灣鐵路,TRA timetable,台湾鉄道時刻表" />
     <meta name="robots" content="index,follow" />
@@ -46,10 +46,26 @@
         "description": "快速查詢台鐵班次、起迄站、停靠站與分享單一班次連結。支援繁體中文、英文、日文，資料來源源自台鐵公開資料。"
       }
     </script>
-    <title>台鐵班次查詢</title>
+    <title>台鐵時刻表查詢｜火車班次、車次與停靠站</title>
   </head>
   <body>
-    <div id="app"></div>
+    <div id="app">
+      <main>
+        <h1>台鐵時刻表查詢</h1>
+        <p>
+          想查哪一天的車，選好出發站、目的地和大概幾點要搭，就可以直接找班次和停靠站。
+        </p>
+        <p>
+          資料整理自公開時刻表，不是即時列車動態；誤點或停駛請以台鐵官方資訊為準。
+        </p>
+        <nav aria-label="台鐵班次查詢資訊">
+          <a href="/stations/">台鐵車站資訊</a>
+          <a href="/guide/">使用說明</a>
+          <a href="/about/">關於本站</a>
+        </nav>
+        <p>正在載入班次查詢工具⋯⋯</p>
+      </main>
+    </div>
     <script type="module" src="/src/main.js"></script>
   </body>
 </html>
