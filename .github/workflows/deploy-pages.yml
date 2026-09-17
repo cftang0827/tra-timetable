@@ -48,7 +48,8 @@ jobs:
           grep -q '<h1>台鐵時刻表查詢</h1>' dist/index.html
           grep -q '<h1>台鐵時刻表查詢說明</h1>' dist/guide/index.html
           grep -q '<h1>臺北車站時刻表</h1>' dist/stations/1000/index.html
-          grep -q 'https://tra-timetable.cftang.dev/stations/1000/' dist/sitemap.xml
+          test "$(grep -o '<url>' dist/sitemap.xml | wc -l | tr -d ' ')" = 1
+          test "$(grep -o '<loc>[^<]*</loc>' dist/sitemap.xml | tr -d '\n')" = '<loc>https://tra-timetable.cftang.dev/</loc>'
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
