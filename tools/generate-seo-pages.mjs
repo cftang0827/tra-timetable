@@ -378,9 +378,9 @@ for (const locale of ["en", "ja"]) {
 
 const staticUrls = ["/", "/en/", "/ja/", "/about/", "/guide/", "/stations/", "/news/", "/en/about/", "/en/guide/", "/en/stations/", "/ja/about/", "/ja/guide/", "/ja/stations/"];
 const stationUrls = validStations.map((station) => `/stations/${encodeURIComponent(station.stationCode)}/`);
-const sitemapUrls = [...staticUrls, ...stationUrls];
+const sitemapUrls = ["/"];
 const sitemap = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${sitemapUrls
-  .map((url) => `  <url><loc>${SITE_URL}${url}</loc></url>`)
+  .map((url) => `  <url>\n    <loc>${SITE_URL}${url}</loc>\n  </url>`)
   .join("\n")}\n</urlset>\n`;
 
 await writeFile(path.join(outputDir, "sitemap.xml"), sitemap);
